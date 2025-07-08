@@ -514,7 +514,7 @@ function MainComponent() {
               </div>
             )}
 
-            <div className="bg-white rounded-lg shadow-sm p-6">
+            <div className="bg-white rounded-lg shadow-sm p-3">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-lg font-semibold flex items-center text-green-600 font-roboto">
                   <i className="fas fa-plus mr-2"></i>
@@ -527,7 +527,7 @@ function MainComponent() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4 md:gap-6">
+              <div className="grid m-0 grid-cols-2 gap-3 md:gap-6">
                 {filteredProducts.map((product) => (
                   <div
                     key={product.id}
@@ -537,7 +537,7 @@ function MainComponent() {
                       <img
                         src={product.image}
                         alt={product.name}
-                        className="w-full h-40 sm:h-48 object-cover"
+                        className="w-full h-40 sm:h-42 lg:h-52 object-cover"
                       />
                       {product.discount && (
                         <span className="absolute top-2 left-2 bg-green-500 text-white px-2 py-1 rounded text-xs font-semibold">
@@ -545,7 +545,7 @@ function MainComponent() {
                         </span>
                       )}
                     </div>
-                    <div className="p-3 sm:p-4">
+                    <div className="p-2 lg:p-4">
                       <h4 className="font-semibold text-gray-800 mb-2 text-sm sm:text-base">
                         {product.name}
                       </h4>
@@ -677,7 +677,7 @@ function MainComponent() {
                         </span>
                       )}
                     </div>
-                    <div className="p-3 sm:p-4">
+                    <div className="p-3 sm:p-2">
                       <h4 className="font-semibold text-gray-800 mb-2 text-sm sm:text-base">
                         {product.name}
                       </h4>
