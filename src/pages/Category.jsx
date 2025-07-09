@@ -11,11 +11,11 @@ function CategoryProduct() {
 
   const categories = [
     { id: "all", name: "All Categories" },
-    { id: "baby-care", name: "Baby Care" },
-    { id: "cleaning", name: "Cleaning & Household" },
-    { id: "fruits", name: "Fruits" },
-    { id: "beverages", name: "Beverages" },
-    { id: "oil-spices", name: "Oil & Spices" },
+    { id: "cadboury", name: "Cadeboury" },
+    { id: "cleaning", name: "Bathroom Cleaning" },
+    { id: "detergents", name: "Surf" },
+    { id: "biscuits", name: "Biscuits & Snacks" },
+    { id: "cake", name: "Cakes" },
     { id: "personal-care", name: "Personal Care" },
     { id: "rice-grains", name: "Rice & Grains" },
     { id: "snacks", name: "Snacks & Food" },
@@ -31,7 +31,7 @@ function CategoryProduct() {
       originalPrice: 6.99,
       image:
         "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=300&h=300&fit=crop",
-      category: "fruits",
+      category: "detergents",
       discount: 29,
       inStock: true,
     },
@@ -41,7 +41,7 @@ function CategoryProduct() {
       price: 2.49,
       image:
         "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=300&h=300&fit=crop",
-      category: "fruits",
+      category: "detergents",
       inStock: true,
     },
     {
@@ -61,7 +61,7 @@ function CategoryProduct() {
       price: 2.99,
       image:
         "https://images.unsplash.com/photo-1544145945-f90425340c7e?w=300&h=300&fit=crop",
-      category: "beverages",
+      category: "biscuits",
       inStock: true,
     },
     {
@@ -70,8 +70,8 @@ function CategoryProduct() {
       price: 24.99,
       originalPrice: 29.99,
       image:
-        "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=300&h=300&fit=crop",
-      category: "baby-care",
+        "https://i5.walmartimages.com/asr/f290d65c-2f3e-41e4-98ce-ea79f7510b6f_1.720928529c4dd3d0b5d058ec2fa08605.jpeg",
+      category: "cadboury",
       discount: 17,
       inStock: true,
     },
@@ -91,7 +91,7 @@ function CategoryProduct() {
       originalPrice: 15.99,
       image:
         "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=300&h=300&fit=crop",
-      category: "oil-spices",
+      category: "cake",
       discount: 19,
       inStock: true,
     },
@@ -130,7 +130,7 @@ function CategoryProduct() {
       price: 5.99,
       image:
         "https://images.unsplash.com/photo-1464965911861-746a04b4bca6?w=300&h=300&fit=crop",
-      category: "fruits",
+      category: "detergents",
       inStock: true,
     },
     {
@@ -169,7 +169,7 @@ function CategoryProduct() {
       originalPrice: 16.99,
       image:
         "https://images.unsplash.com/photo-1622543925917-763c34d1a86e?w=300&h=300&fit=crop",
-      category: "beverages",
+      category: "biscuits",
       discount: 24,
       inStock: true,
     },
@@ -179,7 +179,7 @@ function CategoryProduct() {
       price: 32.99,
       image:
         "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=300&fit=crop",
-      category: "baby-care",
+      category: "cadboury",
       inStock: true,
     },
   ];

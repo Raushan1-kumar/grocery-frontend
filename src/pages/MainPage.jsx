@@ -12,46 +12,46 @@ function MainComponent() {
   const categories = [
     { id: "all", name: "All Categories", count: 0 },
     {
-      id: "baby-care",
-      name: "Baby Care",
+      id: "cadboury",
+      name: "Cadeboury",
       count: 17,
       image:
-        "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=300&h=200&fit=crop",
+        "https://www.egiftmart.com/uploaded_files/itempic/assorted-cadbury-chocolates.jpg",
     },
     {
       id: "cleaning",
-      name: "Cleaning & Household",
+      name: "Bathroom Cleaning",
       count: 25,
       image:
-        "https://images.unsplash.com/photo-1563453392212-326f5e854473?w=300&h=200&fit=crop",
+        "https://th.bing.com/th/id/OIP.d9gtPDB2faTPa4ij8-AhJAHaHa?w=218&h=218&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3",
     },
     {
-      id: "fruits",
-      name: "Fruits",
+      id: "detergents",
+      name: "Surf",
       count: 16,
       image:
-        "https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=300&h=200&fit=crop",
+        "https://th.bing.com/th/id/OIP.lBvaCOlrJeZM-_k6qDpCeAHaE8?w=294&h=195&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3",
     },
     {
-      id: "beverages",
-      name: "Beverages",
+      id: "biscuits",
+      name: "Biscuits & Snacks",
       count: 17,
       image:
-        "https://images.unsplash.com/photo-1544145945-f90425340c7e?w=300&h=200&fit=crop",
+        "https://th.bing.com/th/id/OIP.CyWdEJUvLfWeyjbQgbnRQQHaHa?w=167&h=180&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3",
     },
     {
-      id: "oil-spices",
-      name: "Oil & Spices",
+      id: "cake",
+      name: "Cakes & Pastries",
       count: 19,
       image:
-        "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=300&h=200&fit=crop",
+        "https://th.bing.com/th/id/OIP.eIzK6Q1xGo-2L-LAVSzDTwHaKf?w=202&h=194&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3",
     },
     {
       id: "personal-care",
       name: "Personal Care",
       count: 15,
       image:
-        "https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=300&h=200&fit=crop",
+        "https://ts4.mm.bing.net/th?id=OIP.SrTifjB3wlhSbanhBJfRgwHaIV&pid=15.1",
     },
     {
       id: "rice-grains",
