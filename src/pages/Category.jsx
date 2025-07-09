@@ -1,13 +1,25 @@
 "use client";
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 function CategoryProduct() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const { id } = useParams();
   const [searchTerm, setSearchTerm] = React.useState("");
-  const [selectedCategory, setSelectedCategory] = React.useState("fruits");
+  const [selectedCategory, setSelectedCategory] = React.useState(
+    id || "fruits"
+  );
   const [cartItems, setCartItems] = React.useState([]);
   const [quantities, setQuantities] = React.useState({});
+
+
+    React.useEffect(() => {
+      console.log(id);
+    if (id) {
+      setSelectedCategory(id);
+    }
+  }, [id]);
+
 
   const categories = [
     { id: "all", name: "All Categories" },
@@ -30,7 +42,7 @@ function CategoryProduct() {
       price: 4.99,
       originalPrice: 6.99,
       image:
-        "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=300&h=300&fit=crop",
+        "https://tiimg.tistatic.com/fp/1/007/448/india-no-1-cloth-washing-detergent-powder-available-1-kg-pack-387.jpg",
       category: "detergents",
       discount: 29,
       inStock: true,
@@ -40,7 +52,7 @@ function CategoryProduct() {
       name: "Organic Bananas",
       price: 2.49,
       image:
-        "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=300&h=300&fit=crop",
+        "https://tse2.mm.bing.net/th/id/OIP.Eque9wk-Q2VuJE-iaGt6UQHaL_?w=494&h=800&rs=1&pid=ImgDetMain&o=7&rm=3",
       category: "detergents",
       inStock: true,
     },
@@ -60,17 +72,16 @@ function CategoryProduct() {
       name: "Coconut Water",
       price: 2.99,
       image:
-        "https://images.unsplash.com/photo-1544145945-f90425340c7e?w=300&h=300&fit=crop",
+        "https://5.imimg.com/data5/SELLER/Default/2023/3/291829697/UT/JE/CF/51126755/britannia-bourbon-biscuit-1000x1000.jpg",
       category: "biscuits",
       inStock: true,
     },
     {
       id: 5,
-      name: "Baby Diapers Pack",
+      name: "Celebration Pack",
       price: 24.99,
       originalPrice: 29.99,
-      image:
-        "https://i5.walmartimages.com/asr/f290d65c-2f3e-41e4-98ce-ea79f7510b6f_1.720928529c4dd3d0b5d058ec2fa08605.jpeg",
+      image: "/cad1.jpg",
       category: "cadboury",
       discount: 17,
       inStock: true,
@@ -79,18 +90,16 @@ function CategoryProduct() {
       id: 6,
       name: "All-Purpose Cleaner",
       price: 5.99,
-      image:
-        "https://images.unsplash.com/photo-1563453392212-326f5e854473?w=300&h=300&fit=crop",
+      image: "https://cpimg.tistatic.com/09338485/b/4/Bathroom-Cleaner.jpg",
       category: "cleaning",
       inStock: true,
     },
     {
       id: 7,
-      name: "Olive Oil Premium",
+      name: "Cake",
       price: 12.99,
       originalPrice: 15.99,
-      image:
-        "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=300&h=300&fit=crop",
+      image: "/cake1.jpg",
       category: "cake",
       discount: 19,
       inStock: true,
@@ -110,7 +119,7 @@ function CategoryProduct() {
       price: 8.99,
       originalPrice: 10.99,
       image:
-        "https://images.unsplash.com/photo-1621939514649-280e2ee25f60?w=300&h=300&fit=crop",
+        "https://5.imimg.com/data5/DF/RY/PK/SELLER-86816785/all-types-of-haldiram-namkeen-1000x1000.png",
       category: "snacks",
       discount: 18,
       inStock: true,
@@ -168,18 +177,120 @@ function CategoryProduct() {
       price: 12.99,
       originalPrice: 16.99,
       image:
-        "https://images.unsplash.com/photo-1622543925917-763c34d1a86e?w=300&h=300&fit=crop",
+        "https://5.imimg.com/data5/PI/KI/GLADMIN-68287049/new-good-day-cashew-biscuits-500x500.png",
       category: "biscuits",
       discount: 24,
       inStock: true,
     },
     {
       id: 16,
-      name: "Baby Formula",
+      name: "Cadeboury",
       price: 32.99,
-      image:
-        "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=300&fit=crop",
+      image: "/cad2.jpg",
       category: "cadboury",
+      inStock: true,
+    },
+    {
+      id: 17,
+      name: "Cadeboury",
+      price: 32.99,
+      image: "/cad3.jpg",
+      category: "cadboury",
+      inStock: true,
+    },
+    {
+      id: 18,
+      name: "Cadeboury",
+      price: 32.99,
+      image: "/5 star 5.jpg",
+      category: "cadboury",
+      inStock: true,
+    },
+    {
+      id: 19,
+      name: "Cadeboury",
+      price: 32.99,
+      image: "/cad5.jpg",
+      category: "cadboury",
+      inStock: true,
+    },
+    {
+      id: 20,
+      name: "Cadeboury",
+      price: 32.99,
+      image: "/cad4.jpg",
+      category: "cadboury",
+      inStock: true,
+    },
+    {
+      id: 21,
+      name: "Cake",
+      price: 12.99,
+      originalPrice: 15.99,
+      image: "/cake2.jpg",
+      category: "cake",
+      discount: 19,
+      inStock: true,
+    },
+    {
+      id: 22,
+      name: "Olive Oil Premium",
+      price: 12.99,
+      originalPrice: 15.99,
+      image: "/cake3.jpg",
+      category: "cake",
+      discount: 19,
+      inStock: true,
+    },
+    {
+      id: 23,
+      name: "Cake",
+      price: 12.99,
+      originalPrice: 15.99,
+      image: "/cake4.jpg",
+      category: "cake",
+      discount: 19,
+      inStock: true,
+    },
+    {
+      id: 24,
+      name: "Energy Drink Pack",
+      price: 12.99,
+      originalPrice: 16.99,
+      image:
+        "https://spoonuniversity.com/cdn-cgi/image/width=1024,f=auto/https://s3.amazonaws.com/secretsaucefiles/photos/images/000/209/387/original/Marie_Gold_Karan_Kapoor.jpeg?1530292780",
+      category: "biscuits",
+      discount: 24,
+      inStock: true,
+    },
+    {
+      id: 25,
+      name: "Energy Drink Pack",
+      price: 12.99,
+      originalPrice: 16.99,
+      image: "https://i.ytimg.com/vi/dPbzUJC0n8c/maxresdefault.jpg",
+      category: "biscuits",
+      discount: 24,
+      inStock: true,
+    },
+    {
+      id: 26,
+      name: "All-Purpose Cleaner",
+      price: 5.99,
+      image:
+        "https://tse1.mm.bing.net/th/id/OIP.vtWear2B5ULB4XzxYHQhhAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3",
+      category: "cleaning",
+      inStock: true,
+    },
+    {
+      id: 27,
+      name: "Mixed Nuts Snack",
+      price: 8.99,
+      originalPrice: 10.99,
+      image:
+        "https://5.imimg.com/data5/SELLER/Default/2021/4/FQ/RF/LL/18332572/soan-papdi-1000x1000.jpeg",
+      category: "snacks",
+      discount: 18,
       inStock: true,
     },
   ];
@@ -291,7 +402,12 @@ function CategoryProduct() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center">
-              <div className="bg-green-500 p-2 rounded-lg mr-3" onClick={()=>{navigate("/cart")}}>
+              <div
+                className="bg-green-500 p-2 rounded-lg mr-3"
+                onClick={() => {
+                  navigate("/cart");
+                }}
+              >
                 <i className="fas fa-shopping-cart text-white text-xl"></i>
               </div>
               <div>
@@ -306,7 +422,12 @@ function CategoryProduct() {
 
             <div className="flex items-center space-x-4">
               <div className="relative">
-                <button className="flex items-center space-x-2 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors" onClick={()=>{navigate("/cart")}}>
+                <button
+                  className="flex items-center space-x-2 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors"
+                  onClick={() => {
+                    navigate("/cart");
+                  }}
+                >
                   <i className="fas fa-shopping-cart"></i>
                   <span className="hidden sm:inline">Cart</span>
                   <span className="font-semibold">

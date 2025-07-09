@@ -86,88 +86,88 @@ function MainComponent() {
   const products = [
     {
       id: 1,
-      name: "HTC Touch HD",
+      name: "Cadboury",
       price: 122.0,
       originalPrice: 150.0,
       image:
-        "https://images.unsplash.com/photo-1586201375761-83865001e31c?w=300&h=300&fit=crop",
+        "/cad1.jpg", // Ensure this path is correct
       category: "rice-grains",
       discount: 19,
     },
     {
       id: 2,
-      name: "Palm Tree Pro",
+      name: "5 Star",
       price: 237.99,
       image:
-        "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=300&h=300&fit=crop",
+        "/5star 10.jpg",
       category: "oil-spices",
     },
     {
       id: 3,
-      name: "Canon EOS 5D",
+      name: "Cake",
       price: 899.0,
       image:
-        "https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=300&h=300&fit=crop",
+        "/cake2.jpg",
       category: "fruits",
     },
     {
       id: 4,
-      name: "Nikon D300",
+      name: "Celebration Pack",
       price: 1299.0,
       image:
-        "https://images.unsplash.com/photo-1544145945-f90425340c7e?w=300&h=300&fit=crop",
+        "/cris1.jpg",
       category: "beverages",
     },
     {
       id: 5,
-      name: "iPod Touch",
+      name: "Cadboury Dairy Milk",
       price: 122.0,
       image:
-        "https://images.unsplash.com/photo-1563453392212-326f5e854473?w=300&h=300&fit=crop",
+        "/dairymilk 10.jpg",
       category: "cleaning",
     },
     {
       id: 6,
-      name: "Samsung SyncMaster",
+      name: "Cadboury",
       price: 242.0,
       image:
-        "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=300&h=300&fit=crop",
+        "/cad4.jpg",
       category: "baby-care",
     },
     {
       id: 7,
-      name: "iPod Shuffle",
+      name: "Cadboury Chocolate",
       price: 122.0,
       image:
-        "https://images.unsplash.com/photo-1621939514649-280e2ee25f60?w=300&h=300&fit=crop",
+        "/cad2.jpg", // Ensure this path is correct
       category: "snacks",
     },
     {
       id: 8,
-      name: "iPhone",
+      name: "cake",
       price: 104.0,
       originalPrice: 123.2,
       image:
-        "https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=300&h=300&fit=crop",
+        "/cake1.jpg",
       category: "personal-care",
       discount: 15,
     },
     {
       id: 9,
-      name: "iPod Classic",
+      name: "5 start",
       price: 720.8,
       originalPrice: 1082.0,
       image:
-        "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=300&h=300&fit=crop",
+        "/5 star 5.jpg",
       category: "staple-food",
       discount: 33,
     },
     {
       id: 10,
-      name: "Fresh Orange Juice",
+      name: "Cadboury",
       price: 45.5,
       image:
-        "https://images.unsplash.com/photo-1613478223719-2ab802602423?w=300&h=300&fit=crop",
+        "/cad5.jpg",
       category: "fruit-juice",
     },
   ];
@@ -427,7 +427,7 @@ function MainComponent() {
           <div className="flex flex-col md:flex-row items-center">
             <div className="md:w-1/2 mb-6 md:mb-0">
               <img
-                src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=400&h=300&fit=crop"
+                src="https://th.bing.com/th/id/OIP.ARq-ejT7lEreu4Rx-WR55gHaE8?w=262&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7"
                 alt="Healthy Choice Product"
                 className="w-full max-w-sm mx-auto rounded-lg shadow-lg"
               />
