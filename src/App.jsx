@@ -7,6 +7,8 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import CategoryProduct from './pages/Category'
 import Cart from './pages/Cart'
 import Checkout from './pages/Checkout'
+import ProductForm from './pages/ProductForm'
+import ProductList from './pages/ProductList'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -20,6 +22,10 @@ function App() {
       <Route path="/category/:id" element={<CategoryProduct />} />
       <Route path="/cart" element={<Cart />} />
       <Route path="/checkout" element={<Checkout />} />
+      <Route path="/product-form" element={<ProductForm />} />
+      <Route path="/product-list" element={<ProductList />} />
+
+      {/* Add more routes as needed */}
  
 
      </Routes>

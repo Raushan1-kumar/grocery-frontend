@@ -10,169 +10,177 @@ function MainComponent() {
   const [showMobileMenu, setShowMobileMenu] = React.useState(false);
 
   const categories = [
-    { id: "all", name: "All Categories", count: 0 },
     {
-      id: "cadboury",
-      name: "Cadeboury",
-      count: 17,
-      image:
-        "https://www.egiftmart.com/uploaded_files/itempic/assorted-cadbury-chocolates.jpg",
+      id: "all",
+      name: "All Categories",
+      count: 0,
+      image: "https://cdn-icons-png.flaticon.com/512/263/263115.png",
     },
     {
-      id: "cleaning",
-      name: "Bathroom Cleaning",
-      count: 25,
+      id: "rice-daal",
+      name: "Rice/Daal",
+      count: 10,
       image:
-        "https://th.bing.com/th/id/OIP.d9gtPDB2faTPa4ij8-AhJAHaHa?w=218&h=218&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3",
+        "https://5.imimg.com/data5/SELLER/Default/2021/2/JK/OD/GL/1201862/basmati-rice-500x500.jpg",
     },
     {
-      id: "detergents",
-      name: "Surf",
-      count: 16,
+      id: "oil-ghee",
+      name: "Oil/Ghee",
+      count: 8,
       image:
-        "https://th.bing.com/th/id/OIP.lBvaCOlrJeZM-_k6qDpCeAHaE8?w=294&h=195&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3",
+        "https://www.jiomart.com/images/product/original/490000463/fortune-sunlite-refined-sunflower-oil-1-l-product-images-o490000463-p490000463-0-202203170315.jpg",
+    },
+    {
+      id: "sweets",
+      name: "Sweets",
+      count: 7,
+      image:
+        "https://5.imimg.com/data5/SELLER/Default/2021/4/FQ/RF/LL/18332572/soan-papdi-1000x1000.jpeg",
+    },
+    {
+      id: "spices",
+      name: "Spices",
+      count: 12,
+      image:
+        "https://www.bigbasket.com/media/uploads/p/l/10000148_15-everest-tikhalal-chilli-powder.jpg",
+    },
+    {
+      id: "cakes",
+      name: "Cakes",
+      count: 6,
+      image:
+        "https://www.cakezone.com/blog/wp-content/uploads/2022/07/Chocolate-Truffle-Cake.jpg",
+    },
+    {
+      id: "kurkure-chips",
+      name: "Kurkure/Chips",
+      count: 9,
+      image:
+        "https://www.bigbasket.com/media/uploads/p/l/40075513_3-lays-potato-chips-indias-magic-masala.jpg",
     },
     {
       id: "biscuits",
-      name: "Biscuits & Snacks",
-      count: 17,
+      name: "Biscuits",
+      count: 11,
       image:
-        "https://th.bing.com/th/id/OIP.CyWdEJUvLfWeyjbQgbnRQQHaHa?w=167&h=180&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3",
+        "https://5.imimg.com/data5/PI/KI/GLADMIN-68287049/new-good-day-cashew-biscuits-500x500.png",
     },
     {
-      id: "cake",
-      name: "Cakes & Pastries",
-      count: 19,
+      id: "munch",
+      name: "Munch",
+      count: 5,
       image:
-        "https://th.bing.com/th/id/OIP.eIzK6Q1xGo-2L-LAVSzDTwHaKf?w=202&h=194&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3",
+        "https://www.bigbasket.com/media/uploads/p/l/40075513_3-lays-potato-chips-indias-magic-masala.jpg",
     },
     {
       id: "personal-care",
       name: "Personal Care",
-      count: 15,
-      image:
-        "https://ts4.mm.bing.net/th?id=OIP.SrTifjB3wlhSbanhBJfRgwHaIV&pid=15.1",
-    },
-    {
-      id: "rice-grains",
-      name: "Rice & Grains",
-      count: 18,
-      image:
-        "https://images.unsplash.com/photo-1586201375761-83865001e31c?w=300&h=200&fit=crop",
-    },
-    {
-      id: "snacks",
-      name: "Snacks & Food",
-      count: 12,
-      image:
-        "https://images.unsplash.com/photo-1621939514649-280e2ee25f60?w=300&h=200&fit=crop",
-    },
-    {
-      id: "staple-food",
-      name: "Staple Food",
       count: 10,
       image:
-        "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=300&h=200&fit=crop",
+        "https://www.bigbasket.com/media/uploads/p/l/40128597_1-dove-cream-beauty-bathing-bar.jpg",
     },
     {
-      id: "fruit-juice",
-      name: "Fruit Juice",
+      id: "household-cleaning",
+      name: "Household/Cleaning",
       count: 8,
+      image: "https://cpimg.tistatic.com/09338485/b/4/Bathroom-Cleaner.jpg",
+    },
+    {
+      id: "beverages",
+      name: "Beverages",
+      count: 7,
       image:
         "https://images.unsplash.com/photo-1613478223719-2ab802602423?w=300&h=200&fit=crop",
     },
+    {
+      id: "dry-fruits",
+      name: "Dry Fruits",
+      count: 6,
+      image:
+        "https://5.imimg.com/data5/SELLER/Default/2021/3/YO/ZW/GL/1201862/dry-fruits-500x500.jpg",
+    },
   ];
-
   const products = [
     {
       id: 1,
-      name: "Cadboury",
+      name: "Basmati Rice",
       price: 122.0,
       originalPrice: 150.0,
-      image:
-        "/cad1.jpg", // Ensure this path is correct
-      category: "rice-grains",
+      image: "/cad1.jpg",
+      category: "rice-daal",
       discount: 19,
     },
     {
       id: 2,
-      name: "5 Star",
+      name: "Fortune Sunflower Oil",
       price: 237.99,
-      image:
-        "/5star 10.jpg",
-      category: "oil-spices",
+      image: "/5star 10.jpg",
+      category: "oil-ghee",
     },
     {
       id: 3,
-      name: "Cake",
+      name: "Chocolate Cake",
       price: 899.0,
-      image:
-        "/cake2.jpg",
-      category: "fruits",
+      image: "/cake2.jpg",
+      category: "cakes",
     },
     {
       id: 4,
-      name: "Celebration Pack",
+      name: "Coca Cola",
       price: 1299.0,
-      image:
-        "/cris1.jpg",
+      image: "/cris1.jpg",
       category: "beverages",
     },
     {
       id: 5,
-      name: "Cadboury Dairy Milk",
+      name: "Good Day Biscuits",
       price: 122.0,
-      image:
-        "/dairymilk 10.jpg",
-      category: "cleaning",
+      image: "/dairymilk 10.jpg",
+      category: "biscuits",
     },
     {
       id: 6,
-      name: "Cadboury",
+      name: "Bathroom Cleaner",
       price: 242.0,
-      image:
-        "/cad4.jpg",
-      category: "baby-care",
+      image: "/cad4.jpg",
+      category: "household-cleaning",
     },
     {
       id: 7,
-      name: "Cadboury Chocolate",
+      name: "Kurkure Masala",
       price: 122.0,
-      image:
-        "/cad2.jpg", // Ensure this path is correct
-      category: "snacks",
+      image: "/cad2.jpg",
+      category: "kurkure-chips",
     },
     {
       id: 8,
-      name: "cake",
+      name: "Dove Soap",
       price: 104.0,
       originalPrice: 123.2,
-      image:
-        "/cake1.jpg",
+      image: "/cake1.jpg",
       category: "personal-care",
       discount: 15,
     },
     {
       id: 9,
-      name: "5 start",
+      name: "Dry Fruits Mix",
       price: 720.8,
       originalPrice: 1082.0,
-      image:
-        "/5 star 5.jpg",
-      category: "staple-food",
+      image: "/5 star 5.jpg",
+      category: "dry-fruits",
       discount: 33,
     },
     {
       id: 10,
-      name: "Cadboury",
+      name: "Soan Papdi",
       price: 45.5,
-      image:
-        "/cad5.jpg",
-      category: "fruit-juice",
+      image: "/cad5.jpg",
+      category: "sweets",
     },
   ];
 
   const handleCategoryClick = (categoryId) => {
+    console.log(categoryId);
     navigate(`/category/${categoryId}`);
   };
 
@@ -235,19 +243,31 @@ function MainComponent() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <div
+        className="max-w-7xl gap-2 justify-center flex flex-row bg-green-300  p-1 sm:p-6 lg :p-8" >
+        <div className="h-full w-[47%] text-white bg-red-500  flex justify-center font-bold rounded-lg shadow-md p-2"
+        onClick={() => navigate("/category/rice-daal")}>
+          GROCERY
+        </div>
+        <div className="h-full w-[47%] flex font-bold justify-center text-red-600 bg-white rounded-lg shadow-md p-2 items-center"
+        onClick={() => navigate("/category/sweets")}>
+          SWEETS
+        </div>
+      </div>
       <header className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            <button
+            {/* <button
               className="md:hidden p-2"
               onClick={() => setShowMobileMenu(!showMobileMenu)}
             >
               <i className="fas fa-bars text-xl"></i>
-            </button>
+            </button> */}
 
             <div className="flex items-center">
               <div className="bg-green-500 p-2 rounded-lg mr-3">
-                <i className="fas fa-shopping-cart text-white text-xl" ></i>
+                <i className="fas fa-shopping-cart text-white text-xl"></i>
+              
               </div>
               <div>
                 <h1 className="text-xl font-bold text-gray-900 font-roboto">
@@ -274,9 +294,14 @@ function MainComponent() {
               </div>
             </div>
 
-            <div className="flex items-center space-x-4">
-              <div className="relative">
-                <button className="flex items-center space-x-2 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors" onClick={()=>{navigate("/cart")}}>
+            <div className="flex items-center space-x-2">
+              <div className="relative flex flex-row">
+                <button
+                  className="flex items-center space-x-2 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors"
+                  onClick={() => {
+                    navigate("/cart");
+                  }}
+                >
                   <i className="fas fa-shopping-cart"></i>
                   <span className="hidden sm:inline">My cart</span>
                   <span className="font-semibold">
@@ -288,7 +313,11 @@ function MainComponent() {
                     {getTotalItems()}
                   </span>
                 )}
+                 
               </div>
+               <div className="w-10 h-10  rounded-full bg-gray-500 flex items-center justify-center cursor-pointer">
+                   <i className="fas fa-user text-white"></i>
+                 </div>
             </div>
           </div>
 
@@ -320,7 +349,7 @@ function MainComponent() {
               {categories.map((category) => (
                 <button
                   key={category.id}
-                  onClick={() => handleCategoryClick(category.id)}
+                  onClick={() => handleCategoryClick(category)}
                   className={`w-full text-left p-3 rounded-lg transition-colors ${
                     selectedCategory === category.id
                       ? "bg-green-100 text-green-700 border-l-4 border-green-500"
