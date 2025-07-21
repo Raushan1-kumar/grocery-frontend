@@ -1,6 +1,4 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 import MainComponent from './pages/MainPage'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
@@ -9,6 +7,10 @@ import Cart from './pages/Cart'
 import Checkout from './pages/Checkout'
 import ProductForm from './pages/ProductForm'
 import ProductList from './pages/ProductList'
+import LoginRegister from './pages/LoginRegister'
+import ProfilePage from './pages/ProfilePage'
+import ProfileOrdersMinimal from './pages/CustomerOrder'
+import AdminDashboard from './pages/AdminDashboard'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -24,10 +26,12 @@ function App() {
       <Route path="/checkout" element={<Checkout />} />
       <Route path="/product-form" element={<ProductForm />} />
       <Route path="/product-list" element={<ProductList />} />
-
-      {/* Add more routes as needed */}
- 
-
+      <Route path="/login" element={<LoginRegister/>} />
+      <Route path="/profile" element={<ProfilePage/>} />
+      <Route path="/profile-order" element={<ProfileOrdersMinimal/>} />
+      <Route path="/admin-dashboard" element={<AdminDashboard/>} />
+      <Route path="/admin/add-product" element={<ProductForm />} />
+      <Route path="/admin/orders" element={<ProfileOrdersMinimal />} />
      </Routes>
      </BrowserRouter>
     </>

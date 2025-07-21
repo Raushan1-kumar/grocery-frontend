@@ -2,19 +2,19 @@
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-// Category configuration
+// --- Category and Config ---
 const categoryConfig = {
   'rice-daal':         { unit: 'kg', fields: ['sizes'] },
   'oil-ghee':          { unit: 'kg', fields: ['sizes'] },
-  'sweets':            { unit: 'kg', fields: ['weight', 'pricePerKg'] }, // change to ['sizes'] if you want
+  'sweets':            { unit: 'kg', fields: ['weight', 'pricePerKg'] },
   'spices':            { unit: 'g',  fields: ['sizes'] },
-  'cakes':             { unit: 'piece', fields: ['sizes'] },             // ['sizes'] for piece/weight options
+  'cakes':             { unit: 'piece', fields: ['sizes'] },
   'kurkure-chips':     { unit: 'packet', fields: ['sizes'] },
   'biscuits':          { unit: 'packet', fields: ['sizes'] },
   'munch':             { unit: 'packet', fields: ['sizes'] },
   'personal-care':     { unit: 'unit', fields: ['sizes'] },
   'household-cleaning':{ unit: 'unit', fields: ['sizes'] },
-  'beverages':         { unit: 'ml',   fields: ['sizes'] },              // ['sizes'] for multiple bottle sizes
+  'beverages':         { unit: 'ml',   fields: ['sizes'] },
   'dry-fruits':        { unit: 'g',  fields: ['sizes'] }
 };
 
@@ -34,6 +34,35 @@ const categories = [
   { id: "dry-fruits", name: "Dry Fruits" }
 ];
 
+// --- Backend Add To Cart Function ---
+async function addToCartBackend({ productId, quantity, size, price }) {
+  try {
+    const token = localStorage.getItem("token");
+    console.log(token);
+    console.log(JSON.stringify({ productId, quantity, size, price }));
+    if (!token) {
+      alert("Please log in to add to cart.");
+      return;
+    }
+    const response = await fetch("http://localhost:5000/api/cart/add", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
+      body: JSON.stringify({ productId, quantity, size, price })
+    });
+    const data = await response.json();
+    console.log(data);
+    if (!response.ok) {
+      alert(data.message || "Could not add to cart.");
+    }
+    // else no action needed; optionally update local cart state here
+  } catch (err) {
+    alert("Network error: Could not add to cart.");
+  }
+}
+
 function CategoryProduct() {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -47,7 +76,7 @@ function CategoryProduct() {
   const [quantities, setQuantities] = React.useState({});
   const [selectedSizes, setSelectedSizes] = React.useState({});
 
-  // Fetch product data, only touch data.products if it's an array
+  // Fetch product data
   const fetchProducts = async (categoryId) => {
     if (!categoryId || categoryId === "all") {
       setProducts([]);
@@ -60,7 +89,6 @@ function CategoryProduct() {
       const data = await res.json();
       if (res.ok && data.products && Array.isArray(data.products)) {
         setProducts(data.products);
-        console.log(data.products);
       } else {
         setProducts([]);
         setError(data.message || "No products found for this category.");
@@ -69,7 +97,6 @@ function CategoryProduct() {
       setProducts([]);
       setError("Error connecting to the server. Please check if the backend is running.");
     } finally {
-      console.log(products);
       setLoading(false);
     }
   };
@@ -78,6 +105,7 @@ function CategoryProduct() {
     const cid = id || selectedCategory;
     setSelectedCategory(cid);
     fetchProducts(cid);
+    // eslint-disable-next-line
   }, [id, selectedCategory]);
 
   // Filter products for valid name and search
@@ -103,12 +131,38 @@ function CategoryProduct() {
     setSelectedSizes((prev) => ({ ...prev, [pid]: size }));
   };
 
+  const handleProfileClick = () => {
+    if(!localStorage.getItem("user23")) {
+      navigate("/login");
+      return;
+    }
+    navigate("/profile");
+  };
+
+  // Updated addToCart -- local AND backend + login check
   const addToCart = (product) => {
+    // Check login before adding to cart
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("Please log in to add items to your cart.");
+      navigate("/login");
+      return;
+    }
     const quantity = getQuantity(product._id);
     const selectedSize = selectedSizes[product._id];
     const isSizeBased = categoryConfig[product.category]?.fields.includes("sizes");
-    let cartItem;
+    let price;
 
+    if (isSizeBased) {
+      price = product.sizes?.find(s => s.size === selectedSize)?.price;
+    } else {
+      if (product.category === "cakes") price = product.attributes?.pricePerPiece;
+      else if (product.category === "beverages") price = product.attributes?.price;
+      else if (["spices", "dry-fruits"].includes(product.category)) price = product.attributes?.pricePer100g;
+      else price = product.attributes?.pricePerKg;
+    }
+
+    let cartItem;
     if (isSizeBased) {
       const sizeData = product.sizes?.find((s) => s.size === selectedSize);
       if (!sizeData) {
@@ -125,11 +179,6 @@ function CategoryProduct() {
         quantity
       };
     } else {
-      let price;
-      if (product.category === "cakes") price = product.attributes?.pricePerPiece;
-      else if (product.category === "beverages") price = product.attributes?.price;
-      else if (["spices", "dry-fruits"].includes(product.category)) price = product.attributes?.pricePer100g;
-      else price = product.attributes?.pricePerKg;
       cartItem = {
         id: product._id,
         productName: product.productName,
@@ -151,6 +200,14 @@ function CategoryProduct() {
       else
         return [...prev, cartItem];
     });
+
+    // Now persist to backend
+    addToCartBackend({
+      productId: product._id,
+      quantity,
+      size: isSizeBased ? selectedSize : undefined,
+      price
+    });
   };
 
   const getTotalItems = () => cartItems.reduce((sum, it) => sum + it.quantity, 0);
@@ -159,7 +216,7 @@ function CategoryProduct() {
   const getCurrentCategoryName = () =>
     categories.find((cat) => cat.id === selectedCategory)?.name || "All Categories";
 
-  // --- Banner component for white space/ad sections ---
+  // -- AdBanner (same as before) --
   const AdBanner = ({ type, className = "" }) => {
     if (type === "horizontal") {
       return (
@@ -203,63 +260,62 @@ function CategoryProduct() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header / Cart */}
+      {/* Header / Cart / Profile Icon */}
       <div className=" sticky top-0 z-200">
-
-        <div
-        className="max-w-7xl  justify-center gap-2  flex flex-row bg-green-300  p-1 sm:p-6 lg :p-8" >
-        <div className="h-full w-[47%] text-white bg-red-500  flex justify-center font-bold rounded-lg shadow-md p-2"
-        onClick={() => navigate("/category/rice-daal")}>
-          GROCERY
-        </div>
-        <div className="h-full w-[47%] flex font-bold justify-center text-red-600 bg-white rounded-lg shadow-md p-2 items-center"
-        onClick={() => navigate("/category/sweets")}>
-        
-          SWEETS
-        </div>
-      </div>
-
-      <header className="bg-white shadow-sm border-b sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center">
-              <div
-                className="bg-green-500 p-2 rounded-lg mr-3 cursor-pointer"
-                onClick={() => navigate("/cart")}
-              >
-                <i className="fas fa-shopping-cart text-white text-xl"></i>
-              </div>
-              <div>
-                <h1 className="text-xl font-bold text-gray-900">Grocery</h1>
-                <p className="text-xs text-gray-500 hidden sm:block">Category Products</p>
-              </div>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className="relative flex flex-row">
-                <button
-                  className="flex items-center space-x-1 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors"
-                  onClick={() => navigate("/cart")}
-                >
-                  <i className="fas fa-shopping-cart"></i>
-                  <span className="hidden sm:inline">Cart</span>
-                  <span className="font-semibold">₹{getTotalPrice().toFixed(2)}</span>
-                </button>
-                {getTotalItems() > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-6 w-6 flex items-center justify-center">
-                    {getTotalItems()}
-                  </span>
-                )}
-              </div>
-                 <div className="w-10 h-10  rounded-full bg-gray-500 flex items-center justify-center cursor-pointer">
-                   <i className="fas fa-user text-white"></i>
-                 </div>
-            </div>
+        <div className="max-w-7xl  justify-center gap-2  flex flex-row bg-green-300  p-1 sm:p-6 lg :p-8" >
+          <div className="h-full w-[47%] text-white bg-red-500  flex justify-center font-bold rounded-lg shadow-md p-2"
+            onClick={() => navigate("/category/rice-daal")}>
+            GROCERY
+          </div>
+          <div className="h-full w-[47%] flex font-bold justify-center text-red-600 bg-white rounded-lg shadow-md p-2 items-center"
+            onClick={() => navigate("/category/sweets")}>
+            SWEETS
           </div>
         </div>
-      </header>
+
+        <header className="bg-white shadow-sm border-b sticky top-0 z-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between h-16">
+              <div className="flex items-center">
+                <div
+                  className="bg-green-500 p-2 rounded-lg mr-3 cursor-pointer"
+                  onClick={() => navigate("/cart")}
+                >
+                  <i className="fas fa-shopping-cart text-white text-xl"></i>
+                </div>
+                <div>
+                  <h1 className="text-xl font-bold text-gray-900">Grocery</h1>
+                  <p className="text-xs text-gray-500 hidden sm:block">Category Products</p>
+                </div>
+              </div>
+              <div className="flex items-center space-x-2">
+                <div className="relative flex flex-row">
+                  <button
+                    className="flex items-center space-x-1 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors"
+                    onClick={() => navigate("/cart")}
+                  >
+                    <i className="fas fa-shopping-cart"></i>
+                    <span className="hidden sm:inline">Cart</span>
+                    <span className="font-semibold">₹{getTotalPrice().toFixed(2)}</span>
+                  </button>
+                  {getTotalItems() > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-6 w-6 flex items-center justify-center">
+                      {getTotalItems()}
+                    </span>
+                  )}
+                </div>
+                <div className="w-10 h-10  rounded-full bg-gray-500 flex items-center justify-center cursor-pointer"
+                  onClick={handleProfileClick}
+                >
+                  <i className="fas fa-user text-white"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </header>
       </div>
 
-      {/* Body/Filters */}
+      {/* Filters */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="mb-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -293,7 +349,6 @@ function CategoryProduct() {
           </div>
         </div>
 
-        {/* Loading & error */}
         {error && <p className="text-red-500 mb-4">{error}</p>}
         {loading && <p className="text-blue-500 mb-4">Loading...</p>}
 
@@ -316,7 +371,6 @@ function CategoryProduct() {
                     {product.productName}
                   </h3>
                   <div className="mb-3">
-                    {/* Size-based (packet) product */}
                     {categoryConfig[product.category]?.fields.includes('sizes') ? (
                       <div>
                         <select
@@ -492,5 +546,4 @@ function CategoryProduct() {
     </div>
   );
 }
-
 export default CategoryProduct;

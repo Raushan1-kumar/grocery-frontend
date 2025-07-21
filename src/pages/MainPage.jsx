@@ -18,7 +18,7 @@ function MainComponent() {
     },
     {
       id: "rice-daal",
-      name: "Rice/Daal",
+      name: "Grains",
       count: 10,
       image:
         "https://5.imimg.com/data5/SELLER/Default/2021/2/JK/OD/GL/1201862/basmati-rice-500x500.jpg",
@@ -315,7 +315,9 @@ function MainComponent() {
                 )}
                  
               </div>
-               <div className="w-10 h-10  rounded-full bg-gray-500 flex items-center justify-center cursor-pointer">
+               <div className="w-10 h-10  rounded-full bg-gray-500 flex items-center justify-center cursor-pointer"
+               onClick={() => navigate("/profile")}
+               >
                    <i className="fas fa-user text-white"></i>
                  </div>
             </div>
