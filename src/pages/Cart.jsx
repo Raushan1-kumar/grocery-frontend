@@ -13,15 +13,22 @@ function Cart() {
       setLoading(true);
       try {
         const token = localStorage.getItem("token");
-        const response = await fetch("https://grocery-backend-s1kk.onrender.com/api/cart", {
-          headers: {
-            "Authorization": "Bearer " + token,
-            "Content-Type": "application/json"
+        const response = await fetch(
+          "https://grocery-backend-s1kk.onrender.com/api/cart",
+          {
+            headers: {
+              Authorization: "Bearer " + token,
+              "Content-Type": "application/json",
+            },
           }
-        });
+        );
         const data = await response.json();
-        // adjust if your backend response shape is different!
-        setCartItems(data.cart?.items || []);
+        const cartItems = (data.cart?.items || []).map((item) => ({
+          ...item,
+          productName: item.productId?.productName,
+          imageUrl: item.productId?.imageUrl,
+        }));
+        setCartItems(cartItems);
       } catch (err) {
         setCartItems([]);
       } finally {
@@ -31,29 +38,119 @@ function Cart() {
     fetchCart();
   }, []);
 
-  const updateQuantity = (id, newQuantity) => {
+  // Update quantity in backend and state
+  const updateQuantity = async (id, newQuantity) => {
+    const item = cartItems.find(
+      (item) => item.id === id || item._id === id
+    );
+    if (!item) return;
     if (newQuantity <= 0) {
       removeItem(id);
       return;
     }
-    setCartItems((prev) =>
-      prev.map((item) =>
-        item.id === id || item._id === id
-          ? { ...item, quantity: newQuantity }
-          : item
-      )
+    setLoading(true);
+    try {
+      const token = localStorage.getItem("token");
+      await fetch("https://grocery-backend-s1kk.onrender.com/api/cart/update", {
+        method: "PUT",
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          productId: item.productId?._id || item.productId || id,
+          size: item.size,
+          quantity: newQuantity,
+        }),
+      });
+      // Refetch cart to sync state
+      const response = await fetch(
+        "https://grocery-backend-s1kk.onrender.com/api/cart",
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const data = await response.json();
+      const cartItems = (data.cart?.items || []).map((item) => ({
+        ...item,
+        productName: item.productId?.productName,
+        imageUrl: item.productId?.imageUrl,
+      }));
+      setCartItems(cartItems);
+    } catch (err) {
+      // Optionally show error
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Remove item from backend and state
+  const removeItem = async (id) => {
+    const item = cartItems.find(
+      (item) => item.id === id || item._id === id
     );
-    // Optionally: call backend to update quantity
+    if (!item) return;
+    setLoading(true);
+    try {
+      const token = localStorage.getItem("token");
+      await fetch(
+        `https://grocery-backend-s1kk.onrender.com/api/cart/remove/${item.productId?._id || item.productId || id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: "Bearer " + token,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      // Refetch cart to sync state
+      const response = await fetch(
+        "https://grocery-backend-s1kk.onrender.com/api/cart",
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const data = await response.json();
+      const cartItems = (data.cart?.items || []).map((item) => ({
+        ...item,
+        productName: item.productId?.productName,
+        imageUrl: item.productId?.imageUrl,
+      }));
+      setCartItems(cartItems);
+    } catch (err) {
+      // Optionally show error
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const removeItem = (id) => {
-    setCartItems((prev) => prev.filter((item) => item.id !== id && item._id !== id));
-    // Optionally: call backend to remove
-  };
-
-  const clearCart = () => {
-    setCartItems([]);
-    // Optionally: POST to /api/cart/clear
+  // Clear cart in backend and state
+  const clearCart = async () => {
+    setLoading(true);
+    try {
+      const token = localStorage.getItem("token");
+      await fetch(
+        "https://grocery-backend-s1kk.onrender.com/api/cart/clear",
+        {
+          method: "POST",
+          headers: {
+            Authorization: "Bearer " + token,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      setCartItems([]);
+    } catch (err) {
+      // Optionally show error
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Calculate totals
@@ -82,10 +179,7 @@ function Cart() {
     return (
       <div className="min-h-screen bg-gray-50">
         {/* ... (Empty State code remains as in your original) ... */}
-        {/* Paste your empty state code from above here */}
-        <header className="bg-white shadow-sm border-b">
-          {/* ... */}
-        </header>
+        <header className="bg-white shadow-sm border-b">{/* ... */}</header>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center">
             <div className="bg-gray-100 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-6">
@@ -122,7 +216,9 @@ function Cart() {
                   <i className="fas fa-shopping-cart text-white text-xl"></i>
                 </div>
                 <div>
-                  <h1 className="text-xl font-bold text-gray-900 font-roboto">Grocery</h1>
+                  <h1 className="text-xl font-bold text-gray-900 font-roboto">
+                    Grocery
+                  </h1>
                   <p className="text-xs text-gray-500 hidden sm:block">
                     Click Shopping Hub
                   </p>
@@ -146,7 +242,10 @@ function Cart() {
 
       <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8 py-4">
         <div className="mb-4">
-          <h2 className="text-2xl font-bold text-gray-900 font-roboto" style={{ fontSize: "1.05rem" }}>
+          <h2
+            className="text-2xl font-bold text-gray-900 font-roboto"
+            style={{ fontSize: "1.05rem" }}
+          >
             Shopping Cart
           </h2>
           <p className="text-gray-600 mt-1" style={{ fontSize: "0.85rem" }}>
@@ -176,13 +275,18 @@ function Cart() {
                       <div className="flex space-x-2">
                         <div className="flex-shrink-0">
                           <img
-                            src={item.image}
-                            alt={item.name}
+                            src={
+                              item.imageUrl ||
+                              "https://via.placeholder.com/80"
+                            }
+                            alt={item.productName || "Product"}
                             className="w-12 h-12 rounded-lg object-cover"
                           />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h3 className="font-semibold text-gray-900 mb-1 text-xs">{item.name}</h3>
+                          <h3 className="font-semibold text-gray-900 mb-1 text-xs">
+                            {item.productName}
+                          </h3>
                           <div className="flex items-center space-x-2 mb-1">
                             <span className="font-bold text-green-600 text-xs">
                               ₹{item.price?.toFixed(2)}
@@ -192,7 +296,12 @@ function Cart() {
                           <div className="flex items-center justify-between">
                             <div className="flex items-center border border-gray-300 rounded-lg">
                               <button
-                                onClick={() => updateQuantity(item.id || item._id, (item.quantity || 1) - 1)}
+                                onClick={() =>
+                                  updateQuantity(
+                                    item.id || item._id,
+                                    (item.quantity || 1) - 1
+                                  )
+                                }
                                 className="p-1 hover:bg-gray-100"
                               >
                                 <i className="fas fa-minus text-xs"></i>
@@ -201,7 +310,12 @@ function Cart() {
                                 {item.quantity}
                               </span>
                               <button
-                                onClick={() => updateQuantity(item.id || item._id, (item.quantity || 1) + 1)}
+                                onClick={() =>
+                                  updateQuantity(
+                                    item.id || item._id,
+                                    (item.quantity || 1) + 1
+                                  )
+                                }
                                 className="p-1 hover:bg-gray-100"
                               >
                                 <i className="fas fa-plus text-xs"></i>
@@ -209,7 +323,10 @@ function Cart() {
                             </div>
                             <div className="text-right text-xs">
                               <div className="font-bold text-gray-900">
-                                ₹{((item.price || 0) * (item.quantity || 1)).toFixed(2)}
+                                ₹
+                                {(
+                                  (item.price || 0) * (item.quantity || 1)
+                                ).toFixed(2)}
                               </div>
                               <button
                                 onClick={() => removeItem(item.id || item._id)}
@@ -227,24 +344,44 @@ function Cart() {
                       <div className="grid grid-cols-12 gap-2 items-center">
                         <div className="col-span-6 flex items-center space-x-2">
                           <div className="flex-shrink-0">
-                            <img src={item.image} alt={item.name}
-                              className="w-12 h-12 rounded-lg object-cover" />
+                            <img
+                              src={
+                                item.imageUrl ||
+                                "https://via.placeholder.com/80"
+                              }
+                              alt={item.productName || "Product"}
+                              className="w-12 h-12 rounded-lg object-cover"
+                            />
                           </div>
                           <div>
-                            <h3 className="font-semibold text-gray-900 mb-1 text-xs">{item.name}</h3>
+                            <h3 className="font-semibold text-gray-900 mb-1 text-xs">
+                              {item.productName}
+                            </h3>
                           </div>
                         </div>
                         <div className="col-span-2 flex justify-center">
                           <div className="flex items-center border border-gray-300 rounded-lg">
                             <button
-                              onClick={() => updateQuantity(item.id || item._id, (item.quantity || 1) - 1)}
+                              onClick={() =>
+                                updateQuantity(
+                                  item.id || item._id,
+                                  (item.quantity || 1) - 1
+                                )
+                              }
                               className="p-1 hover:bg-gray-100"
                             >
                               <i className="fas fa-minus text-xs"></i>
                             </button>
-                            <span className="px-2 py-1 text-xs font-medium">{item.quantity}</span>
+                            <span className="px-2 py-1 text-xs font-medium">
+                              {item.quantity}
+                            </span>
                             <button
-                              onClick={() => updateQuantity(item.id || item._id, (item.quantity || 1) + 1)}
+                              onClick={() =>
+                                updateQuantity(
+                                  item.id || item._id,
+                                  (item.quantity || 1) + 1
+                                )
+                              }
                               className="p-1 hover:bg-gray-100"
                             >
                               <i className="fas fa-plus text-xs"></i>
@@ -258,7 +395,10 @@ function Cart() {
                         </div>
                         <div className="col-span-2 text-center">
                           <div className="font-bold text-gray-900 text-xs">
-                            ₹{((item.price || 0) * (item.quantity || 1)).toFixed(2)}
+                            ₹
+                            {((item.price || 0) * (item.quantity || 1)).toFixed(
+                              2
+                            )}
                           </div>
                           <button
                             onClick={() => removeItem(item.id || item._id)}
@@ -296,26 +436,31 @@ function Cart() {
           {/* Order Summary */}
           <div className="lg:w-1/3">
             <div className="bg-white rounded-lg shadow-sm p-4 sticky top-6 text-xs">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2 font-roboto" style={{ fontSize: "1rem" }}>
+              <h3
+                className="text-lg font-semibold text-gray-900 mb-2 font-roboto"
+                style={{ fontSize: "1rem" }}
+              >
                 Order Summary
               </h3>
               <div className="space-y-2 mb-3">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Subtotal ({getTotalItems()} items)</span>
+                  <span className="text-gray-600">
+                    Subtotal ({getTotalItems()} items)
+                  </span>
                   <span className="font-medium">
                     ₹{getSubtotal().toFixed(2)}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Tax</span>
-                  <span className="font-medium">
-                    ₹{getTax().toFixed(2)}
-                  </span>
+                  <span className="font-medium">₹{getTax().toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Shipping</span>
                   <span className="font-medium">
-                    {getShipping() === 0 ? "FREE" : `₹${getShipping().toFixed(2)}`}
+                    {getShipping() === 0
+                      ? "FREE"
+                      : `₹${getShipping().toFixed(2)}`}
                   </span>
                 </div>
                 <div className="border-t border-gray-200 pt-2">
@@ -330,13 +475,15 @@ function Cart() {
               {/* Checkout Button */}
               <button
                 className="w-full bg-green-500 text-white py-2 rounded-lg font-semibold hover:bg-green-600 transition-colors flex items-center justify-center space-x-2 mb-3 text-xs"
-                onClick={() => { alert("Your order Placed Successfully") }}
+                onClick={() => {
+                  alert("Your order Placed Successfully");
+                  clearCart();
+                }}
               >
                 <i className="fas fa-lock"></i>
                 <span>Place your Order</span>
               </button>
               {/* Security Badge */}
-
             </div>
           </div>
         </div>

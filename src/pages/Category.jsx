@@ -35,7 +35,7 @@ const categories = [
 ];
 
 // --- Backend Add To Cart Function ---
-async function addToCartBackend({ productId, quantity, size, price }) {
+async function addToCartBackend({ productId, quantity, size, price,productName, imageUrl }) {
   try {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -48,7 +48,7 @@ async function addToCartBackend({ productId, quantity, size, price }) {
         "Content-Type": "application/json",
         Authorization: "Bearer " + token,
       },
-      body: JSON.stringify({ productId, quantity, size, price })
+      body: JSON.stringify({ productId, quantity, size, price, productName, imageUrl: "" }) // imageUrl can be added if needed
     });
     const data = await response.json();
     if (!response.ok) {
@@ -193,7 +193,9 @@ function CategoryProduct() {
       productId: product._id,
       quantity,
       size: isSizeBased ? selectedSize : undefined,
-      price
+      price,
+      productName: product.productName,
+      imageUrl: product.imageUrl
     });
   };
 
@@ -358,22 +360,22 @@ function CategoryProduct() {
                   <div className="mb-3">
                     {categoryConfig[product.category]?.fields.includes('sizes') ? (
                       <div>
-                        <select
-                          value={selectedSizes[product._id] || ''}
-                          onChange={(e) => handleSizeChange(product._id, e.target.value)}
-                          className="w-40 px-2 py-1 border border-gray-300 rounded-md text-sm"
-                        >
-                          <option value="" className="w-30">Select Size</option>
-                          {product.sizes && product.sizes.length > 0 ? (
-                            product.sizes.map((size) => (
-                              <option key={size.size} value={size.size}>
-                                {size.size} (₹{size.price})
-                              </option>
-                            ))
-                          ) : (
-                            <option value="" disabled>No sizes available</option>
-                          )}
-                        </select>
+                      <select
+  value={selectedSizes[product._id] || ''}
+  onChange={(e) => handleSizeChange(product._id, e.target.value)}
+  className="w-full sm:w-40 px-2 py-1 border border-gray-300 rounded-md text-sm"
+>
+  <option value="" className="w-10">Select Size</option>
+  {product.sizes && product.sizes.length > 0 ? (
+    product.sizes.map((size) => (
+      <option key={size.size} value={size.size}>
+        {size.size} (₹{size.price})
+      </option>
+    ))
+  ) : (
+    <option value="" disabled>No sizes available</option>
+  )}
+</select>
                       </div>
                     ) : (
                       <div>

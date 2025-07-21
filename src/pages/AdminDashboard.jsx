@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-// Dummy Data Example (Replace with your backend/API)
+
 const stats = {
   totalOrders: 5,
   revenue: 2460,
