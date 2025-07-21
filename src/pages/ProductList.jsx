@@ -25,7 +25,7 @@ const ProductList = () => {
     setLoading(true);
     setError('');
     try {
-      const response = await fetch(`http://localhost:5000/api/products/${encodeURIComponent(selectedCategory)}`, {
+      const response = await fetch(`https://grocery-backend-2-vza1.onrender.com/api/products/${encodeURIComponent(selectedCategory)}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
       });
