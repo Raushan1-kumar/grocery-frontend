@@ -46,8 +46,8 @@ export default function LoginRegister() {
     setLoading(true);
     const url =
       mode === 'login'
-        ? 'https://grocery-backend-2-vza1.onrender.com/api/users/login'
-        : 'https://grocery-backend-2-vza1.onrender.com/api/users/register';
+        ? 'https://grocery-backend-s1kk.onrender.com/api/users/login'
+        : 'https://grocery-backend-s1kk.onrender.com/api/users/register';
     const body =
       mode === 'login'
         ? login
@@ -85,8 +85,8 @@ export default function LoginRegister() {
         // Admin login shortcut (frontend only, not secure)
         if (
           mode === 'login' &&
-          login.email === 'admin@gmail.com' &&
-          login.password === 'admin12345'
+          login.email === 'admin1@gmail.com' &&
+          login.password === 'Admin#12345'
         ) {
           if (data.token) {
             localStorage.setItem('admintoken', data.token);

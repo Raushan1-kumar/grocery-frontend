@@ -96,7 +96,7 @@ const ProductForm = () => {
     }
 
     try {
-      const response = await fetch('https://grocery-backend-2-vza1.onrender.com/api/products', {
+      const response = await fetch('https://grocery-backend-s1kk.onrender.com/api/products', {
         method: 'POST',
         body: formData
       });

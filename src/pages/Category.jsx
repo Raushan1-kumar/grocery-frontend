@@ -44,7 +44,7 @@ async function addToCartBackend({ productId, quantity, size, price }) {
       alert("Please log in to add to cart.");
       return;
     }
-    const response = await fetch("https://grocery-backend-2-vza1.onrender.com/api/cart/add", {
+    const response = await fetch("https://grocery-backend-s1kk.onrender.com/api/cart/add", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -85,7 +85,7 @@ function CategoryProduct() {
     setLoading(true);
     setError("");
     try {
-      const res = await fetch(`https://grocery-backend-2-vza1.onrender.com/api/products/${encodeURIComponent(categoryId)}`);
+      const res = await fetch(`https://grocery-backend-s1kk.onrender.com/api/products/${encodeURIComponent(categoryId)}`);
       const data = await res.json();
       if (res.ok && data.products && Array.isArray(data.products)) {
         setProducts(data.products);
