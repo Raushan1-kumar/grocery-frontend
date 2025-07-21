@@ -85,8 +85,8 @@ export default function LoginRegister() {
         // Admin login shortcut (frontend only, not secure)
         if (
           mode === 'login' &&
-          login.email === 'admin1@gmail.com' &&
-          login.password === 'Admin#12345'
+          login.email === 'admin@gmail.com' &&
+          login.password === 'admin12345'
         ) {
           if (data.token) {
             localStorage.setItem('admintoken', data.token);

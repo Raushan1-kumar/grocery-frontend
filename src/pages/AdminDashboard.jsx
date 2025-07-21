@@ -103,7 +103,7 @@ export default function AdminDashboard() {
     <div className="min-h-screen bg-gray-50 pt-5 pb-10 px-2 sm:px-0 relative">
       {/* Header */}
       <div className="flex items-center mb-6 px-2 md:px-8">
-        <h2 className="text-2xl sm:text-3xl font-bold text-gray-800">Admin Dashboard</h2>
+        <h2 className="text-2xl sm:text-3xl font-bold text-gray-800"> Dashboard</h2>
       </div>
 
       {/* Stats Cards */}
