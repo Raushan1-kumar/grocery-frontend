@@ -4,18 +4,18 @@ import { useNavigate, useParams } from "react-router-dom";
 
 // --- Category and Config ---
 const categoryConfig = {
-  'rice-daal':         { unit: 'kg', fields: ['sizes'] },
-  'oil-ghee':          { unit: 'kg', fields: ['sizes'] },
-  'sweets':            { unit: 'kg', fields: ['weight', 'pricePerKg'] },
-  'spices':            { unit: 'g',  fields: ['sizes'] },
-  'cakes':             { unit: 'piece', fields: ['sizes'] },
-  'kurkure-chips':     { unit: 'packet', fields: ['sizes'] },
-  'biscuits':          { unit: 'packet', fields: ['sizes'] },
-  'munch':             { unit: 'packet', fields: ['sizes'] },
-  'personal-care':     { unit: 'unit', fields: ['sizes'] },
-  'household-cleaning':{ unit: 'unit', fields: ['sizes'] },
-  'beverages':         { unit: 'ml',   fields: ['sizes'] },
-  'dry-fruits':        { unit: 'g',  fields: ['sizes'] }
+  'rice-daal':          { unit: 'kg',    fields: ['sizes'] },
+  'oil-ghee':           { unit: 'kg',    fields: ['sizes'] },
+  'sweets':             { unit: 'kg',    fields: ['weight', 'pricePerKg'] },
+  'spices':             { unit: 'g',     fields: ['sizes'] },
+  'cakes':              { unit: 'piece', fields: ['sizes'] },
+  'kurkure-chips':      { unit: 'packet',fields: ['sizes'] },
+  'biscuits':           { unit: 'packet',fields: ['sizes'] },
+  'munch':              { unit: 'packet',fields: ['sizes'] },
+  'personal-care':      { unit: 'unit',  fields: ['sizes'] },
+  'household-cleaning': { unit: 'unit',  fields: ['sizes'] },
+  'beverages':          { unit: 'ml',    fields: ['sizes'] },
+  'dry-fruits':         { unit: 'g',     fields: ['sizes'] }
 };
 
 const categories = [
@@ -38,8 +38,6 @@ const categories = [
 async function addToCartBackend({ productId, quantity, size, price }) {
   try {
     const token = localStorage.getItem("token");
-    console.log(token);
-    console.log(JSON.stringify({ productId, quantity, size, price }));
     if (!token) {
       alert("Please log in to add to cart.");
       return;
@@ -53,11 +51,9 @@ async function addToCartBackend({ productId, quantity, size, price }) {
       body: JSON.stringify({ productId, quantity, size, price })
     });
     const data = await response.json();
-    console.log(data);
     if (!response.ok) {
       alert(data.message || "Could not add to cart.");
     }
-    // else no action needed; optionally update local cart state here
   } catch (err) {
     alert("Network error: Could not add to cart.");
   }
@@ -65,10 +61,9 @@ async function addToCartBackend({ productId, quantity, size, price }) {
 
 function CategoryProduct() {
   const navigate = useNavigate();
-  const { id } = useParams();
+  const { id: currentCategoryId } = useParams(); // Category from URL
 
   const [searchTerm, setSearchTerm] = React.useState("");
-  const [selectedCategory, setSelectedCategory] = React.useState(id || "all");
   const [products, setProducts] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState("");
@@ -76,25 +71,25 @@ function CategoryProduct() {
   const [quantities, setQuantities] = React.useState({});
   const [selectedSizes, setSelectedSizes] = React.useState({});
 
-  // Fetch product data
+  const selectedCategory = currentCategoryId || "all";
+
   const fetchProducts = async (categoryId) => {
-    if (!categoryId || categoryId === "all") {
+    if (categoryId === "all") {
       setProducts([]);
       return;
     }
     setLoading(true);
     setError("");
+    setProducts([]);
     try {
       const res = await fetch(`https://grocery-backend-s1kk.onrender.com/api/products/${encodeURIComponent(categoryId)}`);
       const data = await res.json();
       if (res.ok && data.products && Array.isArray(data.products)) {
         setProducts(data.products);
       } else {
-        setProducts([]);
         setError(data.message || "No products found for this category.");
       }
     } catch (err) {
-      setProducts([]);
       setError("Error connecting to the server. Please check if the backend is running.");
     } finally {
       setLoading(false);
@@ -102,31 +97,24 @@ function CategoryProduct() {
   };
 
   React.useEffect(() => {
-    const cid = id || selectedCategory;
-    setSelectedCategory(cid);
-    fetchProducts(cid);
-    // eslint-disable-next-line
-  }, [id, selectedCategory]);
+    fetchProducts(selectedCategory);
+  }, [selectedCategory]);
 
   // Filter products for valid name and search
   const filteredProducts = products
     .filter((p) => !!p.productName)
     .filter(p => p.productName.toLowerCase().includes(searchTerm.toLowerCase()));
 
-  // Category selection and navigation
+  // Category selection: JUST update the URL
   const handleCategoryChange = (e) => {
-    const value = e.target.value;
-    setSelectedCategory(value);
-    navigate(`/category/${value}`);
+    navigate(`/category/${e.target.value}`);
   };
 
   // Quantity, size and cart handlers
   const getQuantity = (pid) => quantities[pid] || 1;
-
   const updateQuantity = (pid, newQ) => {
     if (newQ >= 1) setQuantities((prev) => ({ ...prev, [pid]: newQ }));
   };
-
   const handleSizeChange = (pid, size) => {
     setSelectedSizes((prev) => ({ ...prev, [pid]: size }));
   };
@@ -139,9 +127,8 @@ function CategoryProduct() {
     navigate("/profile");
   };
 
-  // Updated addToCart -- local AND backend + login check
+  // Updated addToCart
   const addToCart = (product) => {
-    // Check login before adding to cart
     const token = localStorage.getItem("token");
     if (!token) {
       alert("Please log in to add items to your cart.");
@@ -201,7 +188,7 @@ function CategoryProduct() {
         return [...prev, cartItem];
     });
 
-    // Now persist to backend
+    // Persist to backend
     addToCartBackend({
       productId: product._id,
       quantity,
@@ -216,7 +203,6 @@ function CategoryProduct() {
   const getCurrentCategoryName = () =>
     categories.find((cat) => cat.id === selectedCategory)?.name || "All Categories";
 
-  // -- AdBanner (same as before) --
   const AdBanner = ({ type, className = "" }) => {
     if (type === "horizontal") {
       return (
@@ -262,7 +248,7 @@ function CategoryProduct() {
     <div className="min-h-screen bg-gray-50">
       {/* Header / Cart / Profile Icon */}
       <div className=" sticky top-0 z-200">
-        <div className="max-w-7xl  justify-center gap-2  flex flex-row bg-green-300  p-1 sm:p-6 lg :p-8" >
+        <div className="max-w-7xl  justify-center gap-2  flex flex-row bg-green-300  p-1 sm:p-6 lg:p-8" >
           <div className="h-full w-[47%] text-white bg-red-500  flex justify-center font-bold rounded-lg shadow-md p-2"
             onClick={() => navigate("/category/rice-daal")}>
             GROCERY
@@ -272,7 +258,6 @@ function CategoryProduct() {
             SWEETS
           </div>
         </div>
-
         <header className="bg-white shadow-sm border-b sticky top-0 z-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
@@ -337,7 +322,7 @@ function CategoryProduct() {
               <select
                 value={selectedCategory}
                 onChange={handleCategoryChange}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500  bg-white"
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-white"
               >
                 {categories.map((category) => (
                   <option key={category.id} value={category.id}>
@@ -482,7 +467,6 @@ function CategoryProduct() {
             <button
               onClick={() => {
                 setSearchTerm("");
-                setSelectedCategory("all");
                 navigate("/category/all");
               }}
               className="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition-colors"
@@ -546,4 +530,5 @@ function CategoryProduct() {
     </div>
   );
 }
+
 export default CategoryProduct;
