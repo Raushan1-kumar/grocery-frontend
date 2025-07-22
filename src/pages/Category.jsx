@@ -35,10 +35,12 @@ const categories = [
 ];
 
 // --- Backend Add To Cart Function ---
-async function addToCartBackend({ productId, quantity, size, price,productName, imageUrl }) {
+async function addToCartBackend({ productId, quantity, size, price, productName, imageUrl }) {
   try {
     const token = localStorage.getItem("token");
-    if (!token) {
+    console.log(token); 
+    console.log(productId, quantity, size, price, productName, imageUrl);
+   if (!token) {
       alert("Please log in to add to cart.");
       return;
     }
@@ -48,9 +50,10 @@ async function addToCartBackend({ productId, quantity, size, price,productName, 
         "Content-Type": "application/json",
         Authorization: "Bearer " + token,
       },
-      body: JSON.stringify({ productId, quantity, size, price, productName, imageUrl: "" }) // imageUrl can be added if needed
+      body: JSON.stringify({ productId, quantity, size, price, productName, imageUrl })
     });
     const data = await response.json();
+    console.log(data);
     if (!response.ok) {
       alert(data.message || "Could not add to cart.");
     }
@@ -130,6 +133,7 @@ function CategoryProduct() {
   // Updated addToCart
   const addToCart = (product) => {
     const token = localStorage.getItem("token");
+  console.log(product);
     if (!token) {
       alert("Please log in to add items to your cart.");
       navigate("/login");

@@ -138,7 +138,7 @@ function Cart() {
       await fetch(
         "https://grocery-backend-s1kk.onrender.com/api/cart/clear",
         {
-          method: "POST",
+          method: "DELETE",
           headers: {
             Authorization: "Bearer " + token,
             "Content-Type": "application/json",
