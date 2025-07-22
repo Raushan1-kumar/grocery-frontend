@@ -9,8 +9,9 @@ import ProductForm from './pages/ProductForm'
 import ProductList from './pages/ProductList'
 import LoginRegister from './pages/LoginRegister'
 import ProfilePage from './pages/ProfilePage'
-import ProfileOrdersMinimal from './pages/CustomerOrder'
+// import ProfileOrdersMinimal from './pages/CustomerOrder'
 import AdminDashboard from './pages/AdminDashboard'
+import OrderBill from './pages/CustomerOrder'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -28,10 +29,10 @@ function App() {
       <Route path="/product-list" element={<ProductList />} />
       <Route path="/login" element={<LoginRegister/>} />
       <Route path="/profile" element={<ProfilePage/>} />
-      <Route path="/profile-order" element={<ProfileOrdersMinimal/>} />
+      <Route path="/profile-order" element={<OrderBill/>} />
       <Route path="/admin-dashboard" element={<AdminDashboard/>} />
       <Route path="/admin/add-product" element={<ProductForm />} />
-      <Route path="/admin/orders" element={<ProfileOrdersMinimal />} />
+      {/* <Route path="/admin/orders" element={<ProfileOrdersMinimal />} /> */}
      </Routes>
      </BrowserRouter>
     </>

@@ -6,6 +6,8 @@ function Cart() {
   const navigate = useNavigate();
   const [cartItems, setCartItems] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
+  const [orderMessage, setOrderMessage] = React.useState("");
+  const [orderError, setOrderError] = React.useState("");
 
   // Fetch cart from API on mount
   React.useEffect(() => {
@@ -167,7 +169,65 @@ function Cart() {
   const getShipping = () => (getSubtotal() > 50 ? 0 : 5.99);
   const getTotal = () => getSubtotal() + getTax() + getShipping();
 
-  if (loading) {
+  // --- PLACE ORDER FUNCTION ---
+  const placeOrder = async () => {
+    setLoading(true);
+    setOrderMessage("");
+    setOrderError("");
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setOrderError("Please log in to place an order.");
+        navigate("/login");
+        return;
+      }
+
+      // Prepare order items for backend
+      const orderItems = cartItems.map(item => ({
+        productId: item.productId?._id || item.productId,
+        productName: item.productName,
+        quantity: item.quantity,
+        price: item.price,
+        size: item.size || null,
+        imageUrl: item.imageUrl || null
+      }));
+
+      // Call backend to create order
+      const response = await fetch(
+        "http://localhost:5000/api/orders",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token,
+          },
+          body: JSON.stringify({ items: orderItems }),
+        }
+      );
+
+      if (response.ok) {
+        // Order placed successfully
+        setOrderMessage("Order placed successfully!");
+        // clearCart(); // Clear the cart
+        navigate("/profile-order"); // Redirect to orders page
+        // Optionally: Redirect to orders page or show order ID
+        // const data = await response.json();
+        // navigate(`/orders/${data.order._id}`);
+      } else {
+        // Show error from server
+        const data = await response.json();
+        setOrderError(data.message || "Failed to place order");
+      }
+    } catch (err) {
+      setOrderError("Network error: Could not place order");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // --- RENDER ---
+
+  if (loading && cartItems.length === 0) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-green-600 font-bold text-lg">Loading cart...</div>
@@ -175,11 +235,30 @@ function Cart() {
     );
   }
 
-  if (!cartItems.length) {
+  if (cartItems.length === 0) {
     return (
       <div className="min-h-screen bg-gray-50">
-        {/* ... (Empty State code remains as in your original) ... */}
-        <header className="bg-white shadow-sm border-b">{/* ... */}</header>
+        <header className="bg-white shadow-sm border-b">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between h-16">
+              <div className="flex items-center">
+                <a href="/" className="flex items-center">
+                  <div className="bg-green-500 p-2 rounded-lg mr-3">
+                    <i className="fas fa-shopping-cart text-white text-xl"></i>
+                  </div>
+                  <div>
+                    <h1 className="text-xl font-bold text-gray-900 font-roboto">
+                      Grocery
+                    </h1>
+                    <p className="text-xs text-gray-500 hidden sm:block">
+                      Click Shopping Hub
+                    </p>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </header>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center">
             <div className="bg-gray-100 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-6">
@@ -204,7 +283,6 @@ function Cart() {
     );
   }
 
-  // --- Main Cart Page ---
   return (
     <div className="min-h-screen bg-gray-50 text-xs">
       <header className="bg-white shadow-sm border-b">
@@ -241,6 +319,17 @@ function Cart() {
       </header>
 
       <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8 py-4">
+        {orderMessage && (
+          <div className="mb-4 p-2 bg-green-100 text-green-800 rounded text-xs">
+            {orderMessage}
+          </div>
+        )}
+        {orderError && (
+          <div className="mb-4 p-2 bg-red-100 text-red-800 rounded text-xs">
+            {orderError}
+          </div>
+        )}
+
         <div className="mb-4">
           <h2
             className="text-2xl font-bold text-gray-900 font-roboto"
@@ -475,13 +564,20 @@ function Cart() {
               {/* Checkout Button */}
               <button
                 className="w-full bg-green-500 text-white py-2 rounded-lg font-semibold hover:bg-green-600 transition-colors flex items-center justify-center space-x-2 mb-3 text-xs"
-                onClick={() => {
-                  alert("Your order Placed Successfully");
-                  clearCart();
-                }}
+                onClick={placeOrder}
+                disabled={loading || cartItems.length === 0}
               >
-                <i className="fas fa-lock"></i>
-                <span>Place your Order</span>
+                {loading ? (
+                  <>
+                    <i className="fas fa-spinner fa-spin mr-2"></i>
+                    <span>Placing Order...</span>
+                  </>
+                ) : (
+                  <>
+                    <i className="fas fa-lock"></i>
+                    <span>Place your Order</span>
+                  </>
+                )}
               </button>
               {/* Security Badge */}
             </div>
