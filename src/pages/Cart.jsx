@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Cart() {
   const navigate = useNavigate();
@@ -270,13 +270,13 @@ function Cart() {
             <p className="text-gray-600 mb-8">
               Looks like you haven't added any items to your cart yet.
             </p>
-            <a
-              href="/"
+            <Link
+              to="/category/rice-daal"
               className="bg-green-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-600 transition-colors inline-flex items-center"
             >
               <i className="fas fa-shopping-bag mr-2"></i>
               Start Shopping
-            </a>
+            </Link>
           </div>
         </div>
       </div>
@@ -289,7 +289,7 @@ function Cart() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center">
-              <a href="/" className="flex items-center">
+              <Link to="/category/rice-daal" className="flex items-center">
                 <div className="bg-green-500 p-2 rounded-lg mr-3">
                   <i className="fas fa-shopping-cart text-white text-xl"></i>
                 </div>
@@ -301,18 +301,18 @@ function Cart() {
                     Click Shopping Hub
                   </p>
                 </div>
-              </a>
+              </Link>
             </div>
             <div className="flex items-center space-x-4">
-              <a
-                href="/"
+              <Link
+                to="/category/rice-daal"
                 className="text-green-600 hover:text-green-700 font-medium"
                 style={{ fontSize: "0.88rem" }}
               >
                 <i className="fas fa-arrow-left mr-2"></i>
                 <span className="hidden sm:inline">Continue Shopping</span>
                 <span className="sm:hidden">Shop</span>
-              </a>
+              </Link>
             </div>
           </div>
         </div>
@@ -510,13 +510,13 @@ function Cart() {
                   >
                     <i className="fas fa-trash mr-1"></i>Clear Cart
                   </button>
-                  <a
-                    href="/"
+                  <Link
+                    to="/category/rice-daal"
                     className="text-green-600 hover:text-green-700 font-medium text-xs"
                   >
                     <i className="fas fa-arrow-left mr-1"></i>
                     Continue Shopping
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>

@@ -78,9 +78,9 @@ export default function ProfilePage() {
       {/* Cart Button */}
       <button
         className="bg-blue-600 text-white py-2 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors mb-4 w-full max-w-md"
-        onClick={() => navigate("/cart")}
+        onClick={() => navigate("/category/rice-daal")}
       >
-        Check Your Cart <i className="fas fa-shopping-cart ml-2"></i>
+        Start Shopping <i className="fas fa-shopping-cart ml-2"></i>
       </button>
     </div>
     </div>

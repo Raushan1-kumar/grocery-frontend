@@ -123,7 +123,7 @@ function CategoryProduct() {
   };
 
   const handleProfileClick = () => {
-    if(!localStorage.getItem("user23")) {
+    if(!localStorage.getItem("token")) {
       navigate("/login");
       return;
     }
@@ -286,8 +286,8 @@ function CategoryProduct() {
                     onClick={() => navigate("/cart")}
                   >
                     <i className="fas fa-shopping-cart"></i>
-                    <span className="hidden sm:inline">Cart</span>
-                    <span className="font-semibold">₹{getTotalPrice().toFixed(2)}</span>
+                    {/* <span className="hidden sm:inline">Cart</span>
+                    <span className="font-semibold">₹{getTotalPrice().toFixed(2)}</span> */}
                   </button>
                   {getTotalItems() > 0 && (
                     <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-6 w-6 flex items-center justify-center">

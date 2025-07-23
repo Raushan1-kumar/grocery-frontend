@@ -1,6 +1,10 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { io } from "socket.io-client";
+
+const socket = io("https://grocery-backend-s1kk.onrender.com");
+
 
 function OrderDetail() {
   const { orderId } = useParams(); // Get orderId from URL
@@ -9,30 +13,51 @@ function OrderDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+
+
   // --- Fetch order data ---
-  // NOTE: orderId is in the dependency array!
-  useEffect(() => {
-    async function fetchOrder() {
-      setLoading(true);
-      setError("");
-      try {
-        const token = localStorage.getItem("token");
-        if (!token) throw new Error("Please log in.");
-        const res = await fetch(`https://grocery-backend-s1kk.onrender.com/api/orders`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        const data = await res.json();
-        if (res.ok && data.success && data.orders?.length) {
-          setOrder(data.orders[0]); // <-- Set the first (and only) order
-        } else {
-          setError("Order not found");
-        }
-      } catch (err) {
-        setError(err.message || "Failed to fetch order");
-      } finally {
-        setLoading(false);
+useEffect(() => {
+  socket.onAny((event, ...args) => {
+    console.log("Socket event received:", event, args);
+  });
+}, []);
+
+
+  async function fetchOrder() {
+    setLoading(true);
+    setError("");
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) throw new Error("Please log in.");
+      const res = await fetch(`https://grocery-backend-s1kk.onrender.com`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      if (res.ok && data.success && data.orders?.length) {
+        const sorted = data.orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        setOrder(sorted[0]);
+      } else {
+        setError("Order not found");
       }
+    } catch (err) {
+      setError(err.message || "Failed to fetch order");
+    } finally {
+      setLoading(false);
     }
+  }
+
+
+  useEffect(() => {
+    socket.on("orderPlaced", fetchOrder);
+    socket.on("orderUpdated", fetchOrder);
+
+    return () => {
+      socket.off("orderPlaced", fetchOrder); // CORRECT CLEANUP
+      socket.off("orderUpdated", fetchOrder);
+    };
+  }, [orderId]);
+
+  useEffect(() => {
     fetchOrder();
   }, [orderId]); // <-- This ensures re-fetch when orderId changes!
 
@@ -68,10 +93,10 @@ function OrderDetail() {
       <div className="p-4 text-center">
         Order not found.{" "}
         <button
-          onClick={() => navigate("/cart")}
+          onClick={() => navigate("/category/rice-daal")}
           className="text-blue-500 underline"
         >
-          Back to Cart
+          Shop More Product
         </button>
       </div>
     );
@@ -139,10 +164,10 @@ function OrderDetail() {
         </button>
       )}
       <button
-        onClick={() => navigate("/cart")}
+        onClick={() => navigate("/category/rice-daal")}
         className="mt-4 w-full bg-gray-300 text-gray-800 py-2 rounded-lg hover:bg-gray-400"
       >
-        Back to cart
+        Shop more Product
       </button>
     </div>
   );

@@ -279,7 +279,7 @@ function MainComponent() {
               </div>
             </div>
 
-            <div className="hidden md:flex flex-1 max-w-lg mx-8">
+            {/* <div className="hidden md:flex flex-1 max-w-lg mx-8">
               <div className="relative w-full">
                 <input
                   type="text"
@@ -292,7 +292,7 @@ function MainComponent() {
                   <i className="fas fa-search"></i>
                 </button>
               </div>
-            </div>
+            </div> */}
 
             <div className="flex items-center space-x-2">
               <div className="relative flex flex-row">
@@ -303,16 +303,16 @@ function MainComponent() {
                   }}
                 >
                   <i className="fas fa-shopping-cart"></i>
-                  <span className="hidden sm:inline">My cart</span>
+                  {/* <span className="hidden sm:inline">My cart</span>
                   <span className="font-semibold">
                     ${getTotalPrice().toFixed(2)}
-                  </span>
+                  </span> */}
                 </button>
-                {getTotalItems() > 0 && (
+                {/* {getTotalItems() > 0 && (
                   <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-6 w-6 flex items-center justify-center">
                     {getTotalItems()}
                   </span>
-                )}
+                )} */}
                  
               </div>
                <div className="w-10 h-10  rounded-full bg-gray-500 flex items-center justify-center cursor-pointer"
@@ -323,7 +323,7 @@ function MainComponent() {
             </div>
           </div>
 
-          <div className="md:hidden pb-4">
+          {/* <div className="md:hidden pb-4">
             <div className="relative">
               <input
                 type="text"
@@ -336,7 +336,7 @@ function MainComponent() {
                 <i className="fas fa-search"></i>
               </button>
             </div>
-          </div>
+          </div> */}
         </div>
       </header>
 
@@ -373,7 +373,7 @@ function MainComponent() {
         </div>
       )}
 
-      {searchTerm && (
+      {/* {searchTerm && (
         <div className="md:hidden bg-white border-b">
           <div className="max-w-7xl mx-auto px-4 py-4">
             <div className="flex items-center justify-between mb-4">
@@ -437,9 +437,9 @@ function MainComponent() {
                   No products found for "{searchTerm}"
                 </p>
               </div>
-            )}
+            )} */}
 
-            {filteredProducts.length > 6 && (
+            {/* {filteredProducts.length > 6 && (
               <div className="mt-4 text-center">
                 <button
                   onClick={() => setSearchTerm("")}
@@ -451,7 +451,7 @@ function MainComponent() {
             )}
           </div>
         </div>
-      )}
+      )} */}
 
       <div className="bg-gradient-to-r from-green-100 to-green-200 py-8 md:py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
