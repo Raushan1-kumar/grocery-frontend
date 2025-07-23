@@ -29,7 +29,7 @@ useEffect(() => {
     try {
       const token = localStorage.getItem("token");
       if (!token) throw new Error("Please log in.");
-      const res = await fetch(`https://grocery-backend-s1kk.onrender.com`, {
+      const res = await fetch(`http://localhost:5000/api/orders/`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
