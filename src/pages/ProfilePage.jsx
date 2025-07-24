@@ -58,6 +58,7 @@ export default function ProfilePage() {
           onClick={() => {
             // Clear token/session, then redirect
             localStorage.removeItem("token");
+            localStorage.removeItem("stafftoken");
             navigate("/login");
           }}
         >

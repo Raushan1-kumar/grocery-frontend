@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 import axios from "axios";
 
-const socket = io("https://grocery-backend-s1kk.onrender.com"); 
+const socket = io("https://grocery-backend-s1kk.onrender.com");
 
 const cardColors = [
   "bg-green-100 text-green-700 border-green-400",
@@ -19,7 +19,6 @@ export default function AdminDashboard() {
   const [tab, setTab] = useState("active");
   const [billOrder, setBillOrder] = useState(null);
   const [updatingStatus, setUpdatingStatus] = useState(false);
-
 
   const fetchOrders = useMemo(
     () => async () => {
@@ -38,12 +37,11 @@ export default function AdminDashboard() {
     []
   );
 
- useEffect(() => {
+  useEffect(() => {
     socket.on("orderPlaced", fetchOrders);
     socket.on("orderUpdated", fetchOrders);
-
     return () => {
-      socket.off("orderPlaced", fetchOrders); // CORRECT CLEANUP
+      socket.off("orderPlaced", fetchOrders);
       socket.off("orderUpdated", fetchOrders);
     };
   }, []);
@@ -64,7 +62,7 @@ export default function AdminDashboard() {
   const stats = {
     totalOrders: orders.length,
     revenue: orders.reduce((sum, order) => sum + orderTotal(order), 0),
-    products: 38, // TODO: Fetch real count
+    products: 38, // TODO: Replace with real product count
     pendingOrders: activeOrders.length,
   };
 
@@ -80,11 +78,9 @@ export default function AdminDashboard() {
       const token = localStorage.getItem("admintoken");
       await axios.delete(
         `https://grocery-backend-s1kk.onrender.com/api/orders/admin/${orderId}/items/${itemId}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
-      fetchOrders(); // Refresh UI
+      fetchOrders(); // Refresh list
       setBillOrder(null); // Close modal
     } catch (err) {
       alert("Failed to remove item: " + err.message);
@@ -100,7 +96,7 @@ export default function AdminDashboard() {
         { status },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      await fetchOrders(); // Refresh the list
+      await fetchOrders(); // Refresh list
       setBillOrder(null); // Close modal
     } catch (err) {
       alert("Failed to update order status: " + err.message);
@@ -108,6 +104,7 @@ export default function AdminDashboard() {
       setUpdatingStatus(false);
     }
   };
+
   return (
     <div className="min-h-screen bg-gray-50 pt-5 pb-10 px-2 sm:px-0 relative">
       {/* Header */}
@@ -177,8 +174,7 @@ export default function AdminDashboard() {
           </p>
           {loading ? (
             <div className="text-center py-4">Loading...</div>
-          ) : (tab === "active" ? activeOrders : completedOrders).length ===
-            0 ? (
+          ) : (tab === "active" ? activeOrders : completedOrders).length === 0 ? (
             <div className="text-gray-400 text-sm mt-5 text-center">
               No {tab === "active" ? "active" : "completed"} orders.
             </div>
@@ -199,7 +195,9 @@ export default function AdminDashboard() {
                       Order #{order._id.slice(-6)}
                     </div>
                     <div className="text-xs text-gray-600">
-                      {order.user?.name || "Unknown User"}
+                      {order.shop?.name
+                        ? `${order.shop.name} (Shop)`
+                        : order.user?.name || "Unknown User"}
                     </div>
                     <div className="text-xs text-gray-400">
                       Items: {order.items.length}
@@ -209,8 +207,7 @@ export default function AdminDashboard() {
                 <div className="text-right min-w-[80px]">
                   <div
                     className={`font-bold text-lg ${
-                      order.status === "Processing" ||
-                      order.status === "Shipped"
+                      order.status === "Processing" || order.status === "Shipped"
                         ? "text-yellow-600"
                         : "text-green-600"
                     }`}
@@ -237,16 +234,32 @@ export default function AdminDashboard() {
             ))
           )}
         </div>
-        {/* Login as Customer Button (remain unchanged) */}
-        <button
-          className="mt-4 w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg font-semibold transition"
-          onClick={() => {
-            localStorage.removeItem("admintoken");
-            navigate("/login");
-          }}
-        >
-          Login as Customer
-        </button>
+        {/* Login as Customer Button */}
+        <div>
+          <button
+            className="mt-4 w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg font-semibold transition"
+            onClick={() => {
+              localStorage.removeItem("admintoken");
+              navigate("/login");
+            }}
+          >
+            Login as Customer
+          </button>
+          <div className="flex flex-row w-full justify-between mt-1 gap-2">
+            <button
+              className="mt-4 w-full bg-blue-600 hover:bg-green-700 text-white py-2 rounded-lg font-semibold transition"
+              onClick={() => navigate("/add-shop")}
+            >
+              Add Shop
+            </button>
+            <button
+              className="mt-4 w-full bg-red-600 hover:bg-green-700 text-white py-2 rounded-lg font-semibold transition"
+              onClick={() => navigate("/shop-list")}
+            >
+              See All Shops
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* Bill Modal */}
@@ -276,14 +289,27 @@ export default function AdminDashboard() {
                 Date: {new Date(billOrder.createdAt).toLocaleDateString()}
               </div>
               <div className="text-xs text-gray-600">
-                Customer: {billOrder.user?.name || "Unknown User"}
-              </div>
-               <div className="text-xs text-gray-600">
-                address: {billOrder.user?.address || "address"}
+                {billOrder.shop?.name
+                  ? "Ordered for Shop"
+                  : "Ordered by Customer"}
+                :{" "}
+                <span className="font-medium">
+                  {billOrder.shop?.name || billOrder.user?.name || "Unknown User"}
+                </span>
               </div>
               <div className="text-xs text-gray-600">
-                Phone: {billOrder.user?.number || "N/A"}
+                Address:{" "}
+                <span className="font-medium">
+                  {billOrder.shop?.address ||
+                    billOrder.user?.address ||
+                    "Not specified"}
+                </span>
               </div>
+              {!billOrder.shop?.address && (
+                <div className="text-xs text-gray-600">
+                  Phone: {billOrder.user?.number || "N/A"}
+                </div>
+              )}
             </div>
             <div>
               <div className="font-medium mb-1">Items:</div>

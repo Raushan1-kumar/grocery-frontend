@@ -93,7 +93,20 @@ export default function LoginRegister() {
           }
           setSuccessMsg('Admin login successful!');
           navigate('/admin-dashboard');
-        } else {
+        }
+        else if (
+          mode === 'login' &&
+          login.email === 'staff@gmail.com' &&
+          login.password === 'staff12345'
+        ) {
+          if (data.token) {
+            localStorage.setItem('stafftoken', data.token);
+            localStorage.setItem('token', data.token);
+          }
+          setSuccessMsg('staff login successful!');
+          navigate('/home');
+        }
+        else {
           if (mode === 'login') {
             setSuccessMsg('Login successful! Redirecting...');
             if (data.token) {

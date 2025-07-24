@@ -130,11 +130,11 @@ useEffect(() => {
           {order.items.map((item) => (
             <tr key={item._id} className="border-b border-gray-100">
               <td className="py-2 flex items-center">
-                <img
+                {/* <img
                   src={item.imageUrl}
                   alt={item.productName}
                   className="w-10 h-10 rounded-lg object-cover mr-2"
-                />
+                /> */}
                 <span className="font-medium">{item.productName}</span>
               </td>
               <td className="text-center py-2">{item.quantity}</td>
