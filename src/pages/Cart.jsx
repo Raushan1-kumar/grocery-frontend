@@ -389,7 +389,7 @@ function Cart() {
               <div className="flex items-center">
                 <Link to="/category/rice-daal" className="flex items-center">
                   <div className="bg-green-500 font-bold text-white p-2 rounded-lg mr-3">
-                    <h1>RamBabu</h1>
+                    <h1>Aman</h1>
                   </div>
                   <div>
                     {/* <h1 className="text-xl font-bold text-gray-900 font-roboto">

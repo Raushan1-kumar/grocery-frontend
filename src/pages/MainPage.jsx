@@ -106,7 +106,7 @@ function MainComponent() {
             <div className="flex items-center">
               <div className="bg-green-500 text-white font-bold p-2 rounded-lg mr-1">
                 <h1>
-                  RamBabu
+                  Aman
                 </h1>
               </div>
               <div>
