@@ -121,7 +121,13 @@ export default function ProfilePage() {
   }
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login");
+      return;
+    } else {
     fetchUser();
+    }
     // eslint-disable-next-line
   }, []);
 
