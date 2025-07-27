@@ -40,9 +40,11 @@ export default function AdminDashboard() {
   useEffect(() => {
     socket.on("orderPlaced", fetchOrders);
     socket.on("orderUpdated", fetchOrders);
+    socket.on("orderCancelled", fetchOrders);
     return () => {
       socket.off("orderPlaced", fetchOrders);
       socket.off("orderUpdated", fetchOrders);
+      socket.off("orderCancelled", fetchOrders);
     };
   }, []);
 

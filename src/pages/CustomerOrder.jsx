@@ -12,6 +12,7 @@ function OrderDetail() {
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [cancelled, setCancelled] = useState(false);
 
 
 
@@ -50,12 +51,14 @@ useEffect(() => {
   useEffect(() => {
     socket.on("orderPlaced", fetchOrder);
     socket.on("orderUpdated", fetchOrder);
+    socket.on("orderCancelled", fetchOrder);
 
     return () => {
       socket.off("orderPlaced", fetchOrder); // CORRECT CLEANUP
       socket.off("orderUpdated", fetchOrder);
+      socket.off("orderCancelled", fetchOrder);
     };
-  }, [orderId]);
+  }, [orderId,cancelled]);
 
   useEffect(() => {
     fetchOrder();
@@ -67,7 +70,7 @@ useEffect(() => {
     try {
       const token = localStorage.getItem("token");
       const res = await fetch(
-        `https://grocery-backend-s1kk.onrender.com/api/orders/${order._id}`,
+        `http://localhost:5000/api/orders/${order._id}`,
         {
           method: "DELETE",
           headers: { Authorization: `Bearer ${token}` },
@@ -75,6 +78,8 @@ useEffect(() => {
       );
       if (res.ok) {
         alert("Order cancelled");
+        setCancelled(true);
+        setOrder(null); 
         navigate("/cart");
       } else {
         const data = await res.json();
