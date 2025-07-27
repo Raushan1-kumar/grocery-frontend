@@ -6,7 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 const categoryConfig = {
   'rice-daal':          { unit: 'kg',    fields: ['sizes'] },
   'oil-ghee':           { unit: 'kg',    fields: ['sizes'] },
-  'sweets':             { unit: 'kg',    fields: ['weight', 'pricePerKg'] },
+  'sweets':             { unit: 'kg',    fields: ['sizes'] },
   'spices':             { unit: 'g',     fields: ['sizes'] },
   'cakes':              { unit: 'piece', fields: ['sizes'] },
   'kurkure-chips':      { unit: 'packet',fields: ['sizes'] },
