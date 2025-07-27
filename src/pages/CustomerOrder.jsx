@@ -70,7 +70,7 @@ useEffect(() => {
     try {
       const token = localStorage.getItem("token");
       const res = await fetch(
-        `http://localhost:5000/api/orders/${order._id}`,
+        `https://grocery-backend-s1kk.onrender.com/api/orders/${order._id}`,
         {
           method: "DELETE",
           headers: { Authorization: `Bearer ${token}` },
