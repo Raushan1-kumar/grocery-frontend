@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-// If you use react-icons, uncomment the next line
 // import { FaShoppingCart, FaShoppingBag, FaArrowLeft, FaMinus, FaPlus, FaTrash, FaLock, FaSpinner, FaCheck } from "react-icons/fa";
 
 function Cart() {
@@ -12,9 +11,9 @@ function Cart() {
   const [orderError, setOrderError] = useState("");
 
   // --- NEW STATE FOR SHOP MODAL ---
- const [selectedShop, setSelectedShop] = useState(null); // From shop modal
-const [showShopModal, setShowShopModal] = useState(false); // Controls modal
-const [shops, setShops] = useState([]);
+  const [selectedShop, setSelectedShop] = useState(null); // From shop modal
+  const [showShopModal, setShowShopModal] = useState(false); // Controls modal
+  const [shops, setShops] = useState([]);
 
   // Fetch cart from API on mount
   React.useEffect(() => {
@@ -22,7 +21,7 @@ const [shops, setShops] = useState([]);
     const staffToken = localStorage.getItem("stafftoken");
     if (staffToken) {
       fetchShopsForModal();
-      setShowShopModal(true);
+      // Don't open modal on load. Will open when user clicks Select Shop button.
     }
 
     async function fetchCart() {
@@ -72,8 +71,7 @@ const [shops, setShops] = useState([]);
   // --- CONFIRM SHOP SELECTION (CLOSE MODAL) ---
   const confirmShopSelection = () => {
     closeShopModal();
-    // Here, selectedShop is available for use in your order logic
-    // You can pass selectedShop._id to the backend when placing the order
+    setOrderError(""); // Clear error on successful selection
   };
 
   // --- REST OF YOUR EXISTING CART FUNCTIONS (UNCHANGED) ---
@@ -193,95 +191,144 @@ const [shops, setShops] = useState([]);
 
   const getTax = () => getSubtotal() * 0.08;
   const getShipping = () => (getSubtotal() > 50 ? 0 : 5.99);
-  const getTotal = () => getSubtotal()
+  const getTotal = () => getSubtotal();
 
   const placeOrder = async () => {
-  setLoading(true);
-  setOrderMessage("");
-  setOrderError("");
+    setLoading(true);
+    setOrderMessage("");
+    setOrderError("");
 
-  // 1. Validate cart
-  if (cartItems.length === 0) {
-    setOrderError("Your cart is empty.");
-    setLoading(false);
-    return;
-  }
-
-  // 2. Check if staff needs to select a shop
-  const staffToken = localStorage.getItem("stafftoken");
-  if (staffToken && !selectedShop) {
-    setShowShopModal(true);
-    setLoading(false);
-    setOrderError("Please select a shop for the order.");
-    return;
-  }
-
-  try {
-    // 3. Get user token for auth (required)
-    const token = localStorage.getItem("token");
-    if (!token) {
-      setOrderError("Please log in to place an order.");
-      navigate("/login");
+    // 1. Validate cart
+    if (cartItems.length === 0) {
+      setOrderError("Your cart is empty.");
+      setLoading(false);
       return;
     }
 
-    // 4. Prepare order items for backend
-    const orderItems = cartItems.map(item => ({
-      productId: item.productId?._id || item.productId,
-      productName: item.productName,
-      quantity: item.quantity,
-      price: item.price,
-      size: item.size || null,
-      imageUrl: item.imageUrl || null
-    }));
-
-    // 5. Prepare order data (conditional shop)
-    const orderData = {
-      items: orderItems,
-      ...(staffToken && selectedShop && {
-        shop: {
-          id: selectedShop._id,
-          name: selectedShop.name,
-          address: selectedShop.address
-        }
-      })
-    };
-
-    // 6. Call backend API
-    const response = await fetch(
-      "https://grocery-backend-s1kk.onrender.com/api/orders",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
-        },
-        body: JSON.stringify(orderData),
-      }
-    );
-
-    // 7. Handle response
-    if (response.ok) {
-      setOrderMessage("Order placed successfully!");
-      // You can clear cart or redirect as needed
-      // clearCart();
-      navigate("/profile-order"); // Example: redirect to orders page
-      // If you want to show the order ID, parse it here
-      // const data = await response.json();
-      // navigate(`/orders/${data._id}`);
-    } else {
-      const data = await response.json();
-      setOrderError(data.message || "Failed to place order. Please try again.");
+    // 2. Check if staff needs to select a shop
+    const staffToken = localStorage.getItem("stafftoken");
+    if (staffToken && !selectedShop) {
+      setOrderError("Please select a shop for the order.");
+      setLoading(false);
+      setShowShopModal(true); // Prompt modal if order attempted without shop
+      return;
     }
-  } catch (err) {
-    console.error("Place order error:", err);
-    setOrderError("Network error. Please try again.");
-  } finally {
-    setLoading(false);
-  }
-};
 
-  // --- RENDER FUNCTION ---
+    try {
+      // 3. Get user token for auth (required)
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setOrderError("Please log in to place an order.");
+        navigate("/login");
+        return;
+      }
+
+      // 4. Prepare order items for backend
+      const orderItems = cartItems.map((item) => ({
+        productId: item.productId?._id || item.productId,
+        productName: item.productName,
+        quantity: item.quantity,
+        price: item.price,
+        size: item.size || null,
+        imageUrl: item.imageUrl || null,
+      }));
+
+      // 5. Prepare order data (conditional shop)
+      const orderData = {
+        items: orderItems,
+        ...(staffToken &&
+          selectedShop && {
+            shop: {
+              id: selectedShop._id,
+              name: selectedShop.name,
+              address: selectedShop.address,
+            },
+          }),
+      };
+
+      // 6. Call backend API
+      const response = await fetch(
+        "https://grocery-backend-s1kk.onrender.com/api/orders",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token,
+          },
+          body: JSON.stringify(orderData),
+        }
+      );
+
+      // 7. Handle response
+      if (response.ok) {
+        setOrderMessage("Order placed successfully!");
+        // You can clear cart or redirect as needed
+        // clearCart();
+        navigate("/profile-order"); // Example: redirect to orders page
+        // If you want to show the order ID, parse it here
+        // const data = await response.json();
+        // navigate(`/orders/${data._id}`);
+      } else {
+        const data = await response.json();
+        setOrderError(data.message || "Failed to place order. Please try again.");
+      }
+    } catch (err) {
+      console.error("Place order error:", err);
+      setOrderError("Network error. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // --- SHOP SELECTION MODAL ---
+  // This modal is shown ONLY if stafftoken is present and modal is open
+  const ShopModal = () => (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+      <div className="bg-white rounded-lg shadow-xl w-full max-w-md p-6">
+        <h2 className="text-xl font-semibold mb-4">Select Shop</h2>
+        <ul className="space-y-2 mb-4 border-black max-h-96 overflow-y-auto">
+          {shops.map((shop) => (
+            <li
+              key={shop._id}
+              className={`p-3 rounded-lg bg-yellow-200 gap-1 cursor-pointer ${
+                selectedShop?._id === shop._id
+                  ? "bg-emerald-100 border-emerald-300 border-2"
+                  : "hover:bg-gray-50"
+              }`}
+              onClick={() => setSelectedShop(shop)}
+            >
+              {shop.name} +{" "}
+              <span className="text-gray-600 text-xs">{shop.address}</span>
+            </li>
+          ))}
+          {shops.length === 0 && (
+            <li className="p-3 text-center text-gray-500">No shops found</li>
+          )}
+        </ul>
+        <div className="flex justify-end space-x-2">
+          <button
+            onClick={closeShopModal}
+            className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-md"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={confirmShopSelection}
+            disabled={!selectedShop}
+            className={`px-4 py-2 rounded-md ${
+              selectedShop
+                ? "bg-emerald-500 hover:bg-emerald-600 text-white"
+                : "bg-gray-300 text-gray-500 cursor-not-allowed"
+            }`}
+          >
+            Done
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
+  // --- LOADING UI ---
   if (loading && cartItems.length === 0) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -290,6 +337,7 @@ const [shops, setShops] = useState([]);
     );
   }
 
+  // --- EMPTY CART ---
   if (cartItems.length === 0) {
     return (
       <div className="min-h-screen bg-gray-50">
@@ -328,53 +376,6 @@ const [shops, setShops] = useState([]);
     );
   }
 
-  // --- SHOP SELECTION MODAL ---
-  // This modal is shown ONLY if stafftoken is present and modal is open
-  const ShopModal = () => (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-md p-6">
-        <h2 className="text-xl font-semibold mb-4">Select Shop</h2>
-        <ul className="space-y-2 mb-4 max-h-96 overflow-y-auto">
-          {shops.map((shop) => (
-            <li
-              key={shop._id}
-              className={`p-3 rounded-lg cursor-pointer ${
-                selectedShop?._id === shop._id
-                  ? "bg-emerald-100 border border-emerald-300"
-                  : "hover:bg-gray-50"
-              }`}
-              onClick={() => setSelectedShop(shop)}
-            >
-              {shop.name}
-            </li>
-          ))}
-          {shops.length === 0 && (
-            <li className="p-3 text-center text-gray-500">No shops found</li>
-          )}
-        </ul>
-        <div className="flex justify-end space-x-2">
-          <button
-            onClick={closeShopModal}
-            className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-md"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={confirmShopSelection}
-            disabled={!selectedShop}
-            className={`px-4 py-2 rounded-md ${
-              selectedShop
-                ? "bg-emerald-500 hover:bg-emerald-600 text-white"
-                : "bg-gray-300 text-gray-500 cursor-not-allowed"
-            }`}
-          >
-            Done
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-
   return (
     <>
       {/* --- SHOW MODAL IF stafftoken AND modal is open --- */}
@@ -387,13 +388,13 @@ const [shops, setShops] = useState([]);
             <div className="flex items-center justify-between h-16">
               <div className="flex items-center">
                 <Link to="/category/rice-daal" className="flex items-center">
-                  <div className="bg-green-500 p-2 rounded-lg mr-3">
-                    <i className="fas fa-shopping-cart text-white text-xl"></i>
+                  <div className="bg-green-500 font-bold text-white p-2 rounded-lg mr-3">
+                    <h1>RamBabu</h1>
                   </div>
                   <div>
-                    <h1 className="text-xl font-bold text-gray-900 font-roboto">
-                      Grocery
-                    </h1>
+                    {/* <h1 className="text-xl font-bold text-gray-900 font-roboto">
+                      Enterprises & Misthan
+                    </h1> */}
                     <p className="text-xs text-gray-500 hidden sm:block">
                       Click Shopping Hub
                     </p>
@@ -510,9 +511,10 @@ const [shops, setShops] = useState([]);
                               <div className="text-right text-xs">
                                 <div className="font-bold text-gray-900">
                                   ₹
-                                  {((item.price || 0) * (item.quantity || 1)).toFixed(
-                                    2
-                                  )}
+                                  {(
+                                    (item.price || 0) *
+                                    (item.quantity || 1)
+                                  ).toFixed(2)}
                                 </div>
                                 <button
                                   onClick={() => removeItem(item.id || item._id)}
@@ -582,9 +584,10 @@ const [shops, setShops] = useState([]);
                           <div className="col-span-2 text-center">
                             <div className="font-bold text-gray-900 text-xs">
                               ₹
-                              {((item.price || 0) * (item.quantity || 1)).toFixed(
-                                2
-                              )}
+                              {(
+                                (item.price || 0) *
+                                (item.quantity || 1)
+                              ).toFixed(2)}
                             </div>
                             <button
                               onClick={() => removeItem(item.id || item._id)}
@@ -592,7 +595,7 @@ const [shops, setShops] = useState([]);
                             >
                               <i className="fas fa-trash mr-1"></i>Remove
                             </button>
-                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -633,9 +636,7 @@ const [shops, setShops] = useState([]);
                     <span className="text-gray-600">
                       Subtotal ({getTotalItems()} items)
                     </span>
-                    <span className="font-medium">
-                      ₹{getSubtotal().toFixed(2)}
-                    </span>
+                    <span className="font-medium">₹{getSubtotal().toFixed(2)}</span>
                   </div>
                   {/* <div className="flex justify-between">
                     <span className="text-gray-600">Tax</span>
@@ -643,33 +644,52 @@ const [shops, setShops] = useState([]);
                   </div> */}
                   <div className="flex justify-between">
                     <span className="text-gray-600">Shipping</span>
-                    <span className="font-medium">
-                      {getShipping() === 0
-                        ? "FREE"
-                        : `₹${getShipping().toFixed(2)}`}
-                    </span>
+                    <span className="font-medium">free</span>
                   </div>
                   <div className="border-t border-gray-200 pt-2">
                     <div className="flex justify-between text-sm font-bold">
                       <span>Total</span>
-                      <span className="text-green-600">
-                        ₹{getTotal().toFixed(2)}
-                      </span>
+                      <span className="text-green-600">₹{getTotal().toFixed(2)}</span>
                     </div>
                   </div>
-                  {/* For staff users, display selected shop if any */}
-                  {localStorage.getItem("stafftoken") && selectedShop && (
-                    <div className="text-xs mt-2 rounded bg-emerald-50 p-2 text-emerald-800">
-                      <span className="font-semibold">Ordering for shop:</span>{" "}
-                      {selectedShop.name}
+
+                  {/* For staff users: Select Shop Button & Selected Shop display */}
+                  {localStorage.getItem("stafftoken") && (
+                    <div className="mt-4 flex flex-col space-y-2">
+                      <button
+                        type="button"
+                        onClick={openShopModal}
+                        className="w-full bg-emerald-500 text-white py-2 rounded-lg font-semibold hover:bg-emerald-600 transition-colors text-xs flex items-center justify-center space-x-2"
+                      >
+                        <i className="fas fa-store"></i>
+                        <span>Select Shop</span>
+                      </button>
+                      {selectedShop && (
+                        <div className="text-emerald-800 bg-emerald-50 rounded p-2 text-xs font-semibold">
+                          <div>Selected Shop:</div>
+                          <div>{selectedShop.name}</div>
+                          <div className="text-gray-600 font-normal text-xs">
+                            {selectedShop.address}
+                          </div>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
                 {/* Checkout Button */}
                 <button
-                  className="w-full bg-green-500 text-white py-2 rounded-lg font-semibold hover:bg-green-600 transition-colors flex items-center justify-center space-x-2 mb-3 text-xs"
+                  className="w-full bg-green-500 text-white py-2 rounded-lg font-semibold hover:bg-green-600 transition-colors flex items-center justify-center space-x-2 mb-3 text-xs disabled:opacity-60 disabled:cursor-not-allowed"
                   onClick={placeOrder}
-                  disabled={loading || cartItems.length === 0}
+                  disabled={
+                    loading ||
+                    cartItems.length === 0 ||
+                    (localStorage.getItem("stafftoken") && !selectedShop)
+                  }
+                  title={
+                    localStorage.getItem("stafftoken") && !selectedShop
+                      ? "Please select a shop before placing order"
+                      : ""
+                  }
                 >
                   {loading ? (
                     <>

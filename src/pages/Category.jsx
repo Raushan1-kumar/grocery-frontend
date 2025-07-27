@@ -19,8 +19,7 @@ const categoryConfig = {
 };
 
 const categories = [
-  { id: "all", name: "All Categories" },
-  { id: "rice-daal", name: "Rice/Daal" },
+  { id: "rice-daal", name: "Grains" },
   { id: "oil-ghee", name: "Oil/Ghee" },
   { id: "sweets", name: "Sweets" },
   { id: "spices", name: "Spices" },
@@ -268,13 +267,20 @@ function CategoryProduct() {
             <div className="flex items-center justify-between h-16">
               <div className="flex items-center">
                 <div
-                  className="bg-green-500 p-2 rounded-lg mr-3 cursor-pointer"
-                  onClick={() => navigate("/cart")}
+                  className="bg-green-500 text-white font-bold p-2 rounded-lg mr-1 cursor-pointer"
+                  onClick={() => navigate("/")}
                 >
-                  <i className="fas fa-shopping-cart text-white text-xl"></i>
+                  <h1>RamBabu</h1>
                 </div>
                 <div>
-                  <h1 className="text-xl font-bold text-gray-900">Grocery</h1>
+                  {
+                    currentCategoryId  === "sweets" ? (
+                    
+                      <h1 className="text-xl font-bold text-gray-900">Misthan</h1>
+                    ) : (
+                      <h1 className="text-xl font-bold text-gray-900">Enterprises</h1>
+                    )
+                  }
                   <p className="text-xs text-gray-500 hidden sm:block">Category Products</p>
                 </div>
               </div>
@@ -524,7 +530,7 @@ function CategoryProduct() {
               <div className="bg-green-500 p-2 rounded-lg mr-3">
                 <i className="fas fa-shopping-cart text-white text-xl"></i>
               </div>
-              <h3 className="text-xl font-bold">Grocery Store</h3>
+              <h3 className="text-xl font-bold">RamBabu Enterprises & Misthan</h3>
             </div>
             <p className="text-gray-400 text-sm">
               © {new Date().getFullYear()} Grocery Store. All rights reserved.
