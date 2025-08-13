@@ -108,7 +108,7 @@ export default function ProfilePage() {
   async function fetchUser() {
     try {
       setErrorMsg("");
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("user-token");
       const res = await fetch("https://grocery-backend-s1kk.onrender.com/api/users/me", {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -116,12 +116,13 @@ export default function ProfilePage() {
       const data = await res.json();
       setUser(data);
     } catch (err) {
+      navigate('/login')
       setErrorMsg("Could not load profile. Please login again.");
     }
   }
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("user-token");
     if (!token) {
       navigate("/login");
       return;
@@ -135,7 +136,7 @@ export default function ProfilePage() {
   async function handleSaveEdit(newData) {
     setIsSaving(true);
     setErrorMsg("");
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("user-token");
     try {
       const res = await fetch("https://grocery-backend-s1kk.onrender.com/api/users/me", {
         method: "PUT",
@@ -156,7 +157,7 @@ export default function ProfilePage() {
   }
 
   function handleLogout() {
-    localStorage.removeItem("token");
+    localStorage.removeItem("user-token");
     localStorage.removeItem("stafftoken");
     navigate("/login");
   }

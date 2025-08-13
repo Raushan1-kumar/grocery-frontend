@@ -101,7 +101,7 @@ export default function LoginRegister() {
         ) {
           if (data.token) {
             localStorage.setItem('stafftoken', data.token);
-            localStorage.setItem('token', data.token);
+            localStorage.setItem('user-token', data.token);
           }
           setSuccessMsg('staff login successful!');
           navigate('/home');
@@ -110,13 +110,13 @@ export default function LoginRegister() {
           if (mode === 'login') {
             setSuccessMsg('Login successful! Redirecting...');
             if (data.token) {
-              localStorage.setItem('token', data.token);
+              localStorage.setItem('user-token', data.token);
             }
             navigate('/profile');
           } else {
             setSuccessMsg('Registration successful! Please log in.');
             if (data.token) {
-              localStorage.setItem('token', data.token);
+              localStorage.setItem('user-token', data.token);
             }
             setMode('login');
           }

@@ -36,7 +36,7 @@ const categories = [
 // --- Backend Add To Cart Function ---
 async function addToCartBackend({ productId, quantity, size, price, productName, imageUrl }) {
   try {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("user-token");
     
    if (!token) {
       alert("Please log in to add to cart.");
@@ -121,7 +121,7 @@ function CategoryProduct() {
   };
 
   const handleProfileClick = () => {
-    if(!localStorage.getItem("token")) {
+    if(!localStorage.getItem("user-token")) {
       navigate("/login");
       return;
     }
@@ -130,7 +130,7 @@ function CategoryProduct() {
 
   // Updated addToCart
   const addToCart = (product) => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("user-token");
 
     if (!token) {
       alert("Please log in to add items to your cart.");
@@ -254,7 +254,7 @@ function CategoryProduct() {
       <div className=" sticky top-0 z-200">
         <div className="max-w-7xl  justify-center gap-2  flex flex-row bg-green-300  p-1 sm:p-6 lg:p-8" >
           <div className="h-full w-[47%] text-white bg-red-500  flex justify-center font-bold rounded-lg shadow-md p-2"
-            onClick={() => navigate("/category/rice-daal")}>
+            onClick={() => navigate("/")}>
             GROCERY
           </div>
           <div className="h-full w-[47%] flex font-bold justify-center text-red-600 bg-white rounded-lg shadow-md p-2 items-center"
@@ -266,12 +266,25 @@ function CategoryProduct() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
               <div className="flex items-center">
-                <div
+                {
+                  currentCategoryId ==="sweets" ? (
+                    <div
                   className="bg-green-500 text-white font-bold p-2 rounded-lg mr-1 cursor-pointer"
                   onClick={() => navigate("/")}
                 >
                   <h1>Aman</h1>
+                </div>):
+                (
+                <div
+                  className="bg-green-500 text-white font-bold p-2 rounded-lg mr-1 cursor-pointer"
+                  onClick={() => navigate("/")}
+                >
+                  <h1>Rambabu
+                  </h1>
                 </div>
+                  )
+                }
+                
                 <div>
                   {
                     currentCategoryId  === "sweets" ? (

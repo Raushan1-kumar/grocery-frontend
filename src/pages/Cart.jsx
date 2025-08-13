@@ -27,7 +27,7 @@ function Cart() {
     async function fetchCart() {
       setLoading(true);
       try {
-        const token = localStorage.getItem("token");
+        const token = localStorage.getItem("user-token");
         const response = await fetch(
           "https://grocery-backend-s1kk.onrender.com/api/cart",
           {
@@ -84,7 +84,7 @@ function Cart() {
     }
     setLoading(true);
     try {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("user-token");
       await fetch("https://grocery-backend-s1kk.onrender.com/api/cart/update", {
         method: "PUT",
         headers: {
@@ -126,7 +126,7 @@ function Cart() {
     if (!item) return;
     setLoading(true);
     try {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("user-token");
       await fetch(
         `https://grocery-backend-s1kk.onrender.com/api/cart/remove/${item.productId?._id || item.productId || id}`,
         {
@@ -164,7 +164,7 @@ function Cart() {
   const clearCart = async () => {
     setLoading(true);
     try {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("user-token");
       await fetch("https://grocery-backend-s1kk.onrender.com/api/cart/clear", {
         method: "DELETE",
         headers: {
@@ -189,8 +189,8 @@ function Cart() {
       0
     );
 
-  const getTax = () => getSubtotal() * 0.08;
-  const getShipping = () => (getSubtotal() > 50 ? 0 : 5.99);
+  // const getTax = () => getSubtotal() * 0.08;
+  // const getShipping = () => (getSubtotal() > 50 ? 0 : 5.99);
   const getTotal = () => getSubtotal();
 
   const placeOrder = async () => {
@@ -216,7 +216,7 @@ function Cart() {
 
     try {
       // 3. Get user token for auth (required)
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("user-token");
       if (!token) {
         setOrderError("Please log in to place an order.");
         navigate("/login");

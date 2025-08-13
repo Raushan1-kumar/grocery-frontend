@@ -28,7 +28,7 @@ useEffect(() => {
     setLoading(true);
     setError("");
     try {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("user-token");
       if (!token) throw new Error("Please log in.");
       const res = await fetch(`https://grocery-backend-s1kk.onrender.com/api/orders/`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -68,7 +68,7 @@ useEffect(() => {
   const cancelOrder = async () => {
     if (!confirm("Are you sure you want to cancel this order?")) return;
     try {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("user-token");
       const res = await fetch(
         `https://grocery-backend-s1kk.onrender.com/api/orders/${order._id}`,
         {
