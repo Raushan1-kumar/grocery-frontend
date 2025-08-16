@@ -106,7 +106,7 @@ export default function ShopListPage() {
     const fetchShops = async () => {
       try {
         setLoading(true);
-        const res = await fetch("https://grocery-backend-s1kk.onrender.com/api/shops");
+        const res = await fetch("https://grocery-backend-3fd4.onrender.com/api/shops");
         if (res.ok) {
           const data = await res.json();
           setShops(data);
@@ -126,7 +126,7 @@ export default function ShopListPage() {
   const handleDelete = async (id) => {
     setLoading(true);
     try {
-      const res = await fetch(`https://grocery-backend-s1kk.onrender.com/api/shops/${id}`, { method: "DELETE" });
+      const res = await fetch(`https://grocery-backend-3fd4.onrender.com/api/shops/${id}`, { method: "DELETE" });
       if (res.ok) {
         setShops(shops.filter((shop) => shop._id !== id));
         setMessage("Shop deleted.");
@@ -145,7 +145,7 @@ export default function ShopListPage() {
   const handleEditSave = async (id, updatedData) => {
     setEditLoading(true);
     try {
-      const res = await fetch(`https://grocery-backend-s1kk.onrender.com/api/shops/${id}`, {
+      const res = await fetch(`https://grocery-backend-3fd4.onrender.com/api/shops/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updatedData),

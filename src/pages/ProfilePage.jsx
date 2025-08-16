@@ -109,7 +109,7 @@ export default function ProfilePage() {
     try {
       setErrorMsg("");
       const token = localStorage.getItem("user-token");
-      const res = await fetch("https://grocery-backend-s1kk.onrender.com/api/users/me", {
+      const res = await fetch("https://grocery-backend-3fd4.onrender.com/api/users/me", {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (!res.ok) throw new Error("Failed to fetch user");
@@ -138,7 +138,7 @@ export default function ProfilePage() {
     setErrorMsg("");
     const token = localStorage.getItem("user-token");
     try {
-      const res = await fetch("https://grocery-backend-s1kk.onrender.com/api/users/me", {
+      const res = await fetch("https://grocery-backend-3fd4.onrender.com/api/users/me", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

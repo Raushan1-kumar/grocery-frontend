@@ -29,7 +29,7 @@ function Cart() {
       try {
         const token = localStorage.getItem("user-token");
         const response = await fetch(
-          "https://grocery-backend-s1kk.onrender.com/api/cart",
+          "https://grocery-backend-3fd4.onrender.com/api/cart",
           {
             headers: {
               Authorization: "Bearer " + token,
@@ -56,7 +56,7 @@ function Cart() {
   // --- FETCH SHOPS FOR MODAL ---
   const fetchShopsForModal = async () => {
     try {
-      const response = await fetch("https://grocery-backend-s1kk.onrender.com/api/shops");
+      const response = await fetch("https://grocery-backend-3fd4.onrender.com/api/shops");
       const data = await response.json();
       setShops(data);
     } catch (err) {
@@ -85,7 +85,7 @@ function Cart() {
     setLoading(true);
     try {
       const token = localStorage.getItem("user-token");
-      await fetch("https://grocery-backend-s1kk.onrender.com/api/cart/update", {
+      await fetch("https://grocery-backend-3fd4.onrender.com/api/cart/update", {
         method: "PUT",
         headers: {
           Authorization: "Bearer " + token,
@@ -99,7 +99,7 @@ function Cart() {
       });
       // Refetch cart to sync state
       const response = await fetch(
-        "https://grocery-backend-s1kk.onrender.com/api/cart",
+        "https://grocery-backend-3fd4.onrender.com/api/cart",
         {
           headers: {
             Authorization: "Bearer " + token,
@@ -128,7 +128,7 @@ function Cart() {
     try {
       const token = localStorage.getItem("user-token");
       await fetch(
-        `https://grocery-backend-s1kk.onrender.com/api/cart/remove/${item.productId?._id || item.productId || id}`,
+        `https://grocery-backend-3fd4.onrender.com/api/cart/remove/${item.productId?._id || item.productId || id}`,
         {
           method: "DELETE",
           headers: {
@@ -139,7 +139,7 @@ function Cart() {
       );
       // Refetch cart to sync state
       const response = await fetch(
-        "https://grocery-backend-s1kk.onrender.com/api/cart",
+        "https://grocery-backend-3fd4.onrender.com/api/cart",
         {
           headers: {
             Authorization: "Bearer " + token,
@@ -165,7 +165,7 @@ function Cart() {
     setLoading(true);
     try {
       const token = localStorage.getItem("user-token");
-      await fetch("https://grocery-backend-s1kk.onrender.com/api/cart/clear", {
+      await fetch("https://grocery-backend-3fd4.onrender.com/api/cart/clear", {
         method: "DELETE",
         headers: {
           Authorization: "Bearer " + token,
@@ -248,7 +248,7 @@ function Cart() {
 
       // 6. Call backend API
       const response = await fetch(
-        "https://grocery-backend-s1kk.onrender.com/api/orders",
+        "https://grocery-backend-3fd4.onrender.com/api/orders",
         {
           method: "POST",
           headers: {

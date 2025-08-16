@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 import axios from "axios";
 
-const socket = io("https://grocery-backend-s1kk.onrender.com");
+const socket = io("https://grocery-backend-3fd4.onrender.com");
 
 const cardColors = [
   "bg-green-100 text-green-700 border-green-400",
@@ -25,7 +25,7 @@ export default function AdminDashboard() {
       setLoading(true);
       try {
         const token = localStorage.getItem("admintoken");
-        const res = await axios.get("https://grocery-backend-s1kk.onrender.com/api/orders/admin", {
+        const res = await axios.get("https://grocery-backend-3fd4.onrender.com/api/orders/admin", {
           headers: { Authorization: `Bearer ${token}` },
         });
         setOrders(res.data.orders || []);
@@ -79,7 +79,7 @@ export default function AdminDashboard() {
     try {
       const token = localStorage.getItem("admintoken");
       await axios.delete(
-        `https://grocery-backend-s1kk.onrender.com/api/orders/admin/${orderId}/items/${itemId}`,
+        `https://grocery-backend-3fd4.onrender.com/api/orders/admin/${orderId}/items/${itemId}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       fetchOrders(); // Refresh list
@@ -94,7 +94,7 @@ export default function AdminDashboard() {
     try {
       const token = localStorage.getItem("admintoken");
       await axios.patch(
-        `https://grocery-backend-s1kk.onrender.com/api/orders/admin/${billOrder._id}/status`,
+        `https://grocery-backend-3fd4.onrender.com/api/orders/admin/${billOrder._id}/status`,
         { status },
         { headers: { Authorization: `Bearer ${token}` } }
       );

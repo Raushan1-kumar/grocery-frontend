@@ -46,8 +46,8 @@ export default function LoginRegister() {
     setLoading(true);
     const url =
       mode === 'login'
-        ? 'https://grocery-backend-s1kk.onrender.com/api/users/login'
-        : 'https://grocery-backend-s1kk.onrender.com/api/users/register';
+        ? 'https://grocery-backend-3fd4.onrender.com/api/users/login'
+        : 'https://grocery-backend-3fd4.onrender.com/api/users/register';
     const body =
       mode === 'login'
         ? login

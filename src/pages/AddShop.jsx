@@ -17,7 +17,7 @@ export default function ShopForm() {
     e.preventDefault();
     setLoading(true); // Show loader
     try {
-      const res = await fetch("https://grocery-backend-s1kk.onrender.com/api/shops", {
+      const res = await fetch("https://grocery-backend-3fd4.onrender.com/api/shops", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
