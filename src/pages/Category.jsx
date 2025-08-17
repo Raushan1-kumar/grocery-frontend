@@ -272,14 +272,14 @@ function CategoryProduct() {
                   className="bg-green-500 text-white font-bold p-2 rounded-lg mr-1 cursor-pointer"
                   onClick={() => navigate("/")}
                 >
-                  <h1>Aman</h1>
+                  <h1>Rambabu</h1>
                 </div>):
                 (
                 <div
                   className="bg-green-500 text-white font-bold p-2 rounded-lg mr-1 cursor-pointer"
                   onClick={() => navigate("/")}
                 >
-                  <h1>Rambabu
+                  <h1>Aman
                   </h1>
                 </div>
                   )
@@ -526,7 +526,7 @@ function CategoryProduct() {
           <div className="text-center">
             <div className="flex items-center justify-center mb-4">
              
-              <h3 className="text-xl font-bold">Rambabu Enterprises & Aman Misthan</h3>
+              <h3 className="text-xl font-bold">Aman Enterprises & Rambabu Misthan</h3>
             </div>
             <p className="text-gray-400 text-sm">
               © {new Date().getFullYear()} Grocery Store. All rights reserved.

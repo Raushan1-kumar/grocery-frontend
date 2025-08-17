@@ -130,12 +130,7 @@ export default function AdminDashboard() {
           <div className="text-lg font-bold">₹{stats.revenue}</div>
           <div className="text-xs opacity-80">Revenue</div>
         </div>
-        <div
-          className={`${cardColors[2]} rounded-xl px-3 py-4 border flex flex-col items-center shadow-sm`}
-        >
-          <div className="text-lg font-bold">{stats.products}</div>
-          <div className="text-xs opacity-80">Products</div>
-        </div>
+    
         <div
           className={`${cardColors[3]} rounded-xl px-3 py-4 border flex flex-col items-center shadow-sm`}
         >
