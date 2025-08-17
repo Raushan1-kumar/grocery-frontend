@@ -517,22 +517,7 @@ function CategoryProduct() {
               Learn More
             </button>
           </div>
-          <div className="bg-gradient-to-r from-purple-400 to-purple-500 rounded-lg p-6 text-white">
-            <div className="flex items-center mb-4">
-              <img
-                src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=80&h=80&fit=crop"
-                alt="Quality guarantee"
-                className="w-16 h-16 rounded-lg mr-4"
-              />
-              <div>
-                <h4 className="font-semibold text-lg">Quality Guarantee</h4>
-                <p className="text-sm opacity-90">100% fresh products</p>
-              </div>
-            </div>
-            <button className="bg-white text-purple-600 px-6 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
-              Our Promise
-            </button>
-          </div>
+         
         </div>
       </div>
       {/* Footer */}
@@ -540,10 +525,8 @@ function CategoryProduct() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center">
             <div className="flex items-center justify-center mb-4">
-              <div className="bg-green-500 p-2 rounded-lg mr-3">
-                <i className="fas fa-shopping-cart text-white text-xl"></i>
-              </div>
-              <h3 className="text-xl font-bold">Aman Enterprises & Misthan</h3>
+             
+              <h3 className="text-xl font-bold">Rambabu Enterprises & Aman Misthan</h3>
             </div>
             <p className="text-gray-400 text-sm">
               © {new Date().getFullYear()} Grocery Store. All rights reserved.

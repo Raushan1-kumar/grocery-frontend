@@ -106,7 +106,7 @@ function MainComponent() {
             <div className="flex items-center">
               <div className="bg-green-500 text-white font-bold p-2 rounded-lg mr-1">
                 <h1>
-                  Aman
+                  Rambabu
                 </h1>
               </div>
               <div>
@@ -260,14 +260,14 @@ function MainComponent() {
               <h3 className="font-semibold mb-4">Contact Us</h3>
               <div className="space-y-2 text-sm text-gray-300">
                 <p>
-                  <i className="fas fa-phone mr-2"></i> +1 234 567 8900
+                  <i className="fas fa-phone mr-2"></i>+91 8789195420
                 </p>
                 <p>
-                  <i className="fas fa-envelope mr-2"></i> info@grocery.com
+                  <i className="fas fa-envelope mr-2"></i> AmanenterprisesEcomm@gmail.com
                 </p>
                 <p>
-                  <i className="fas fa-map-marker-alt mr-2"></i> 123 Main St,
-                  City
+                  <i className="fas fa-map-marker-alt mr-2"></i> Rambabu Misthan Government Bus stand 
+                  Runnisaidpur Sitamarhi Bihar
                 </p>
               </div>
             </div>
