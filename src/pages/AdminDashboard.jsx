@@ -1,7 +1,9 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 import axios from "axios";
+import html2canvas from "html2canvas";   // ✅ For bill capture
+import jsPDF from "jspdf";               // ✅ For PDF export
 
 const socket = io("https://grocery-backend-3fd4.onrender.com");
 
@@ -19,6 +21,7 @@ export default function AdminDashboard() {
   const [tab, setTab] = useState("active");
   const [billOrder, setBillOrder] = useState(null);
   const [updatingStatus, setUpdatingStatus] = useState(false);
+  const billRef = useRef(); // ✅ Capture bill div for download
 
   const fetchOrders = useMemo(
     () => async () => {
@@ -106,6 +109,90 @@ export default function AdminDashboard() {
       setUpdatingStatus(false);
     }
   };
+
+  // ✅ Download Bill as PDF
+ const handleDownloadBill = () => {
+  if (!billOrder) return;
+
+  // Create plain text content for the bill
+  const itemsText = billOrder.items
+    .map(
+      (item) =>
+        `${item.productName} - ₹${item.price} x ${item.quantity} = ₹${(
+          item.price * item.quantity
+        ).toFixed(2)}`
+    )
+    .join("\n");
+
+  const billText = `Order Bill #${billOrder._id.slice(-6)}
+Date: ${new Date(billOrder.createdAt).toLocaleDateString()}
+Customer/Shop: ${billOrder.shop?.name || billOrder.user?.name || "Unknown"}
+Address: ${billOrder.shop?.address || billOrder.user?.address || "Not specified"}
+
+Items:
+${itemsText}
+
+Total: ₹${orderTotal(billOrder)}`;
+
+  // Create a Blob with the text content
+  const blob = new Blob([billText], { type: "text/plain" });
+
+  // Create an object URL and trigger download
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `Order_${billOrder._id.slice(-6)}.txt`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+};
+
+
+const handleShareBill = async () => {
+  if (!billOrder) return;
+
+  // Construct plain text of bill details
+  const itemsText = billOrder.items
+    .map(
+      (item) =>
+        `${item.productName} - ₹${item.price} x ${item.quantity} = ₹${(
+          item.price * item.quantity
+        ).toFixed(2)}`
+    )
+    .join("\n");
+
+  const shareText = `Order Bill #${billOrder._id.slice(-6)}
+Date: ${new Date(billOrder.createdAt).toLocaleDateString()}
+Customer/Shop: ${billOrder.shop?.name || billOrder.user?.name || "Unknown"}
+Address: ${billOrder.shop?.address || billOrder.user?.address || "Not specified"}
+
+Items:
+${itemsText}
+
+Total: ₹${orderTotal(billOrder)}`;
+
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: `Order Bill #${billOrder._id.slice(-6)}`,
+        text: shareText,
+      });
+    } catch (error) {
+      console.error("Share cancelled or failed", error);
+    }
+  } else {
+    // Fallback: copy to clipboard or show alert with details
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(shareText);
+      alert("Bill details copied to clipboard!");
+    } else {
+      alert(shareText);
+    }
+  }
+};
+
+
 
   return (
     <div className="min-h-screen bg-gray-50 pt-5 pb-10 px-2 sm:px-0 relative">
@@ -266,6 +353,7 @@ export default function AdminDashboard() {
           onClick={() => setBillOrder(null)}
         >
           <div
+            ref={billRef}   // ✅ Bill content reference
             className="bg-white w-[90vw] sm:w-[400px] rounded-lg shadow-lg p-5 relative animate-fade-in"
             onClick={(e) => e.stopPropagation()}
           >
@@ -342,7 +430,7 @@ export default function AdminDashboard() {
                 ₹{orderTotal(billOrder)}
               </span>
             </div>
-            <div className="flex gap-3 mt-5">
+            <div className="flex gap-3 mt-5 flex-wrap">
               <button
                 className={`bg-green-600 hover:bg-green-700 text-white flex-1 py-2 rounded-lg font-semibold disabled:opacity-50 ${
                   billOrder.status === "Delivered"
@@ -354,12 +442,26 @@ export default function AdminDashboard() {
               >
                 {updatingStatus ? "Updating..." : "Mark Completed"}
               </button>
-              <button
+              {/* <button
                 className="bg-yellow-400 hover:bg-yellow-500 text-yellow-900 flex-1 py-2 rounded-lg font-semibold"
                 onClick={() => setBillOrder(null)}
                 disabled={updatingStatus}
               >
                 Close
+              </button> */}
+
+              {/* ✅ New Buttons */}
+              <button
+                className="bg-blue-600 hover:bg-blue-700 text-white flex-1 py-2 rounded-lg font-semibold"
+                onClick={handleDownloadBill}
+              >
+                Download <br></br>Bill
+              </button>
+              <button
+                className="bg-purple-600 hover:bg-purple-700 text-white flex-1 py-2 rounded-lg font-semibold"
+                onClick={handleShareBill}
+              >
+                Share Bill
               </button>
             </div>
           </div>
